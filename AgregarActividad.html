@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarea1</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+    <form action="" method="post" id="form">
+        <div>
+            <p>Donde?</p>
+        <label for="region"> Selecciona Region</label>
+        <select name="regiones" id="region">
+            <option value="region1">Region1</option>
+            <option value="region2">Region2</option>
+            <option value="region3">Region3</option>
+            <option value="region4">Region4</option>
+            <option value="region5">Region5</option>
+            <option value="region6">Region6</option>
+            <option value="region7">Region7</option>
+            <option value="region8">Region8</option>
+            <option value="region9">Region9</option>
+            <option value="region10">Region10</option>
+        </select>
+    </div>
+    <script src="Javascript.js"></script>
+    <div>
+        <label for="comuna"> Selecciona Comuna</label>
+        <select name="comunas" id="comuna"> a </select>
+
+
+
+    </div>
+
+    <div>
+        <label for="sector">Sector</label>
+        <input type="text" size="100" maxlength="100" id="sector">
+    </div>
+
+    <p>Quien lo organiza</p>
+    <label for="name">Nombre</label>
+    <input type="text" size="50" maxlength="200" id ="name" required>
+
+    <div>
+        <label for="email"> email</label>
+        <input type="email" name="email" id="email" maxlength="100" required>
+        <span id="errorEmail"></span>
+        <button onclick="correoValido()">Validar</button>
+
+    </div>
+
+    <div>
+        <label for="number">número de celular</label>
+        <input type="text" id="number" name="numero">
+    </div>
+
+    <div>
+        <label for="contactar"> contactar por</label>
+        <select name="contactar" id="contactar">
+            <option value="" hidden selected>Seleccione una opción</option>
+            <option value="whatsapp">whatsapp</option>
+            <option value="telegram">telegram</option>
+            <option value="x">x</option>
+            <option value="otra">otra</option>
+            <option value=""></option>
+            <option value=""></option>
+            <option value=""></option>
+        </select>
+    </div>
+    <p>¿Cuándo y de qué trata?:</p>
+    <div>
+        <label for="DiaHoraInicio">Día hora inicio</label>
+        <input type="datetime-local" id="DiaHoraInicio" name="DiaHoraInicio">
+    </div>
+   
+    <!--hay que validar que sea > que la hora de inicio-->
+        <label for="DiaHoraTermino">Día hora término</label>
+        <input type="datetime-local" id="DiaHoraTermino" name="DiaHoraTermino">
+    </div>
+    <div>
+        <label for="descripción">descripción:</label>
+        <input type="textArea" id="descripción" name="descripción">
+    </div>
+    <div>
+        <!--hay un input escondido, que se despliega cuando seleccionamos otro, puede mezclar cosas
+        ejemplo -->
+        <label for="tema">tema</label>
+        <input type="text" id="tema" name="tema">
+    </div>
+    <div>
+        <label for="Foto">Fotos (máximo 5)</label>
+        <input type="file" id="Foto" name="Foto" required>
+        <button type="button" id="agregarFoto"> +fotos</button>
+
+        
+    </div>
+
+
+
+
+
+    <script src="Javascript.js"></script>
+
+    <button type="button" id="AgregarActividad" onclick="MensajeRecibido()"> Agregar esta actividad </button>
+
+
+></form>
+<button type="button" onclick="location.href='index.html'">Volver a la portada</button>
+
+
+
+
+    
+</body>
+</html>
