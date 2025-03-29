@@ -33,3 +33,23 @@
 .MenuNavegacion{
     font-size: 30px;
 }
+.centrado {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .centrado label,
+  .centrado select,
+  .centrado p {
+    display: block;
+    margin: 10px auto;
+  }
+  
+  .centrado select {
+    width: 250px;
+    padding: 5px;
+  }
+
+#titulo{
+    font-size: 50px;
+}

@@ -1,117 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarea1</title>
-    <link rel="stylesheet" href="estilos.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agregar Actividad</title>
+  <link rel="stylesheet" href="agregarActividad.css"/>
 </head>
 <body>
+  <form action="" method="post" id="form" class="formulario">
+    <h1 id="titulo">¿Dónde?</h1>
 
-    <form action="" method="post" id="form">
-        <div>
-            <p>Donde?</p>
-        <label for="region"> Selecciona Region</label>
-        <select name="regiones" id="region">
-            <option value="region1">Region1</option>
-            <option value="region2">Region2</option>
-            <option value="region3">Region3</option>
-            <option value="region4">Region4</option>
-            <option value="region5">Region5</option>
-            <option value="region6">Region6</option>
-            <option value="region7">Region7</option>
-            <option value="region8">Region8</option>
-            <option value="region9">Region9</option>
-            <option value="region10">Region10</option>
-        </select>
-    </div>
-    <script src="Javascript.js"></script>
-    <div>
-        <label for="comuna"> Selecciona Comuna</label>
-        <select name="comunas" id="comuna"> a </select>
-
-
-
-    </div>
-
-    <div>
-        <label for="sector">Sector</label>
-        <input type="text" size="100" maxlength="100" id="sector">
+    <div class="fila-horizontal">
+      <label for="regiones">Seleccione la región</label>
+      <select name="regiones" id="regiones" required>
+        <option value="selector" disabled selected>Seleccione una región</option>
+        <option value="arica">Arica y Parinacota</option>
+        <option value="tarapaca">Tarapacá</option>
+        <option value="antofagasta">Antofagasta</option>
+        <option value="atacama">Atacama</option>
+        <option value="coquimbo">Coquimbo</option>
+        <option value="valparaiso">Valparaíso</option>
+        <option value="metropolitana">Región Metropolitana</option>
+        <option value="ohiggins">Libertador General Bernardo O'Higgins</option>
+        <option value="maule">Maule</option>
+        <option value="nuble">Ñuble</option>
+        <option value="biobio">Biobío</option>
+        <option value="araucania">La Araucanía</option>
+        <option value="losrios">Los Ríos</option>
+        <option value="loslagos">Los Lagos</option>
+        <option value="aysen">Aysén del General Carlos Ibáñez del Campo</option>
+        <option value="magallanes">Magallanes y de la Antártica Chilena</option>
+      </select>
     </div>
 
-    <p>Quien lo organiza</p>
-    <label for="name">Nombre</label>
-    <input type="text" size="50" maxlength="200" id ="name" required>
-
-    <div>
-        <label for="email"> email</label>
-        <input type="email" name="email" id="email" maxlength="100" required>
-        <span id="errorEmail"></span>
-        <button onclick="correoValido()">Validar</button>
-
+    <div class="fila-horizontal">
+      <label for="comuna">Seleccione la comuna</label>
+      <select name="comunas" id="comuna" required>
+        <option value="selector" disabled selected>Seleccione una comuna</option>
+      </select>
     </div>
 
-    <div>
-        <label for="number">número de celular</label>
-        <input type="text" id="number" name="numero">
+    <div class="fila-horizontal">
+      <label for="sector">Sector (opcional)</label>
+      <input type="text" id="sector" maxlength="100" size="50" />
     </div>
 
-    <div>
-        <label for="contactar"> contactar por</label>
-        <select name="contactar" id="contactar">
-            <option value="" hidden selected>Seleccione una opción</option>
-            <option value="whatsapp">whatsapp</option>
-            <option value="telegram">telegram</option>
-            <option value="x">x</option>
-            <option value="otra">otra</option>
-            <option value=""></option>
-            <option value=""></option>
-            <option value=""></option>
-        </select>
-    </div>
-    <p>¿Cuándo y de qué trata?:</p>
-    <div>
-        <label for="DiaHoraInicio">Día hora inicio</label>
-        <input type="datetime-local" id="DiaHoraInicio" name="DiaHoraInicio">
-    </div>
-   
-    <!--hay que validar que sea > que la hora de inicio-->
-        <label for="DiaHoraTermino">Día hora término</label>
-        <input type="datetime-local" id="DiaHoraTermino" name="DiaHoraTermino">
-    </div>
-    <div>
-        <label for="descripción">descripción:</label>
-        <input type="textArea" id="descripción" name="descripción">
-    </div>
-    <div>
-        <!--hay un input escondido, que se despliega cuando seleccionamos otro, puede mezclar cosas
-        ejemplo -->
-        <label for="tema">tema</label>
-        <input type="text" id="tema" name="tema">
-    </div>
-    <div>
-        <label for="Foto">Fotos (máximo 5)</label>
-        <input type="file" id="Foto" name="Foto" required>
-        <button type="button" id="agregarFoto"> +fotos</button>
+    <h2 style="text-align: center;">¿Quién lo organiza?</h2>
 
-        
+    <div class="fila-horizontal">
+      <label for="name">Nombre</label>
+      <input type="text" id="name" maxlength="200" required />
     </div>
 
+    <div class="fila-horizontal">
+      <label for="email">Email</label>
+      <input type="email" id="email" maxlength="100" required />
+      <button type="button" onclick="correoValido()">Validar</button>
+      <span id="errorEmail"></span>
+    </div>
 
+    <div class="fila-horizontal">
+      <label for="number">Número de celular</label>
+      <input type="text" id="number" name="numero" />
+    </div>
 
+    <div class="fila-horizontal">
+      <label for="contactar">Contactar por</label>
+      <select name="contactar" id="contactar">
+        <option value="" hidden selected>Seleccione una opción</option>
+        <option value="whatsapp">WhatsApp</option>
+        <option value="telegram">Telegram</option>
+        <option value="x">X</option>
+        <option value="otra">Otra</option>
+      </select>
+    </div>
 
+    <h2>¿Cuándo y de qué trata?</h2>
 
-    <script src="Javascript.js"></script>
+    <div class="fila-horizontal">
+      <label for="DiaHoraInicio">Día y hora inicio</label>
+      <input type="datetime-local" id="DiaHoraInicio" name="DiaHoraInicio" />
+    </div>
 
-    <button type="button" id="AgregarActividad" onclick="MensajeRecibido()"> Agregar esta actividad </button>
+    <div class="fila-horizontal">
+      <label for="DiaHoraTermino">Día y hora término</label>
+      <input type="datetime-local" id="DiaHoraTermino" name="DiaHoraTermino" />
+    </div>
 
+    <div class="fila-horizontal">
+      <label for="descripción">Descripción</label>
+      <textarea id="descripción" name="descripción" rows="3" cols="40"></textarea>
+    </div>
 
-></form>
-<button type="button" onclick="location.href='index.html'">Volver a la portada</button>
+    <div class="fila-horizontal">
+      <label for="tema">Tema</label>
+      <input type="text" id="tema" name="tema" />
+    </div>
 
+    <div class="fila-horizontal">
+      <label for="Foto">Fotos (máx. 5)</label>
+      <input type="file" id="Foto" name="Foto" required />
+      <button type="button" id="agregarFoto">+fotos</button>
+    </div>
 
+    <button type="button" id="AgregarActividad" onclick="MensajeRecibido()">
+      Agregar esta actividad
+    </button>
+  </form>
 
+  <button type="button" onclick="location.href='index.html'">Volver a la portada</button>
 
-    
+  <script src="Javascript.js"></script>
 </body>
 </html>
