@@ -75,3 +75,35 @@ body {
   input[type="datetime-local"] {
     min-width: 250px;
   }
+
+
+#input-otro-contacto {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+#otroInput{
+  padding: 3%;
+  width: 800px;
+}
+
+#zona-fotos {
+  display: flex;
+  flex-direction: column; 
+  gap: 10px; 
+  flex: 1;
+}
+
+.foto-input {
+  width: 100%;
+}
+
+
+.error-span {
+  color: red;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+
+
