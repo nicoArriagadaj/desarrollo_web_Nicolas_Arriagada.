@@ -1,76 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ListadoDeActividades</title>
+    <link rel="stylesheet" href="ListadoDeActividades.css">
 </head>
 <body>
-    <p> si hago click sobre cualquiera, doy otro html con la ficha, algo ordenado, 
-        y luego se puede volver</p>
+    <p style="font-size: 30px;">Si haces clic sobre cualquiera, te lleva a otro HTML con la ficha ordenada, y luego se puede volver.</p>
 
-        <a href="infoOrdenada.html">informacion ordenada</a>
     <table class="table">
         <tr> 
-            <th> Inicio </th>
-            <th> Termino </th>
-            <th> Comuna </th>
-            <th> Sector </th>
-            <th> Tema </th>
-            <th> Foto </th>
+            <th>Inicio</th>
+            <th>Término</th>
+            <th>Comuna</th>
+            <th>Sector</th>
+            <th>Tema</th>
+            <th>Nombre Organizador</th>
+            <th>Total Fotos</th>
         </tr>
-
-        <tr>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
+        <tr class="clickable-row" data-id="1">
+            <td>2025-03-28 12:00</td>
+            <td>2025-03-28 14:00</td>
+            <td>Conchalí</td>
+            <td>Plaza Bicentenario</td>
+            <td>Taller de Basketball</td>
+            <td>Juan Pablo</td>
+            <td>2</td>
         </tr>
-        <tr>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
+        <tr class="clickable-row" data-id="2">
+            <td>2025-04-01 10:00</td>
+            <td>2025-04-01 12:00</td>
+            <td>Recoleta</td>
+            <td>Plaza Santa Mónica</td>
+            <td>Ejercicio al aire libre</td>
+            <td>María Paz</td>
+            <td>3</td>
         </tr>
-        <tr>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
+        <tr class="clickable-row" data-id="3">
+            <td>2025-04-05 09:30</td>
+            <td>2025-04-05 11:00</td>
+            <td>Ñuñoa</td>
+            <td>Parque Ramón Cruz</td>
+            <td>Clase de Yoga</td>
+            <td>Camila Torres</td>
+            <td>5</td>
         </tr>
-        <tr>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
+        <tr class="clickable-row" data-id="4">
+            <td>2025-04-10 15:00</td>
+            <td>2025-04-10 17:00</td>
+            <td>La Florida</td>
+            <td>Plaza Violeta Parra</td>
+            <td>Cine Infantil al Aire Libre</td>
+            <td>Rodrigo Díaz</td>
+            <td>4</td>
         </tr>
-        <tr>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
-            <td> valor1</td>
+        <tr class="clickable-row" data-id="5">
+            <td>2025-04-15 11:00</td>
+            <td>2025-04-15 13:00</td>
+            <td>Puente Alto</td>
+            <td>Parque Gabriela</td>
+            <td>Feria de Emprendedores</td>
+            <td>Javiera León</td>
+            <td>4</td>
         </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
     </table>
 
-    
+    <script>
+        document.querySelectorAll(".clickable-row").forEach(row => {
+            row.addEventListener("click", () => {
+                const id = row.getAttribute("data-id");
+                // con ?, estamos pasando datos a otra pagina 
+                window.location.href = `infoOrdenada.html?id=${id}`;
+            });
+        });
+    </script>
 </body>
 </html>

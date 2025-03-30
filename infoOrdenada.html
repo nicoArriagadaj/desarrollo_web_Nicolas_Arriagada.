@@ -1,12 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>infoOrdenada</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Información de la Actividad</title>
 </head>
 <body>
-    <a href="ListadoDeActividades.html"> volver al ListadoDeActividades</a>
-    
+
+  <h1>Ficha de Actividad</h1>
+
+  <div id="contenidoActividad"></div>
+
+  <hr>
+  <script>
+    // arreglo con actividades
+    const actividades = [
+      {
+        inicio: "2025-03-28 12:00",
+        termino: "2025-03-28 14:00",
+        comuna: "Conchalí",
+        sector: "Plaza Bicentenario",
+        tema: "Taller de Basketball",
+        organizador: "Juan Pablo",
+        fotos: 2
+      },
+      {
+        inicio: "2025-04-01 10:00",
+        termino: "2025-04-01 12:00",
+        comuna: "Recoleta",
+        sector: "Plaza Santa Mónica",
+        tema: "Ejercicio al aire libre",
+        organizador: "María Paz",
+        fotos: 3
+      },
+      {
+        inicio: "2025-04-05 09:30",
+        termino: "2025-04-05 11:00",
+        comuna: "Ñuñoa",
+        sector: "Parque Ramón Cruz",
+        tema: "Clase de Yoga",
+        organizador: "Camila Torres",
+        fotos: 5
+      },
+      {
+        inicio: "2025-04-10 15:00",
+        termino: "2025-04-10 17:00",
+        comuna: "La Florida",
+        sector: "Plaza Violeta Parra",
+        tema: "Cine Infantil al Aire Libre",
+        organizador: "Rodrigo Díaz",
+        fotos: 4
+      },
+      {
+        inicio: "2025-04-15 11:00",
+        termino: "2025-04-15 13:00",
+        comuna: "Puente Alto",
+        sector: "Parque Gabriela",
+        tema: "Feria de Emprendedores",
+        organizador: "Javiera León",
+        fotos: 4
+      }
+    ];
+
+    // obtenemos los id=1 o 2 y lo pasamos a entero
+    const id = parseInt(new URLSearchParams(window.location.search).get("id"));
+    // actividades, arreglo parte de 0 al 4 (son 5)
+    const act = actividades[id - 1];
+
+    document.getElementById("contenidoActividad").innerHTML = `
+      <p><strong>Inicio:</strong> ${act.inicio}</p>
+      <p><strong>Término:</strong> ${act.termino}</p>
+      <p><strong>Comuna:</strong> ${act.comuna}</p>
+      <p><strong>Sector:</strong> ${act.sector}</p>
+      <p><strong>Tema:</strong> ${act.tema}</p>
+      <p><strong>Organizador:</strong> ${act.organizador}</p>
+      <p><strong>Total de Fotos:</strong> ${act.fotos}</p>
+    `;
+  </script>
+
+<a href="ListadoDeActividades.html">Volver al Listado de Actividades</a><br>
+<a href="index.html">Volver a la Portada</a>
+
 </body>
 </html>
