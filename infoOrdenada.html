@@ -22,7 +22,8 @@
         sector: "Plaza Bicentenario",
         tema: "Taller de Basketball",
         organizador: "Juan Pablo",
-        fotos: 2
+        fotos: 2 ,
+        img : "fotos/basket.jpg"
       },
       {
         inicio: "2025-04-01 10:00",
@@ -31,7 +32,8 @@
         sector: "Plaza Santa Mónica",
         tema: "Ejercicio al aire libre",
         organizador: "María Paz",
-        fotos: 3
+        fotos: 3,
+        img : "fotos/ejercicioAireLibre.jpg"
       },
       {
         inicio: "2025-04-05 09:30",
@@ -40,16 +42,19 @@
         sector: "Parque Ramón Cruz",
         tema: "Clase de Yoga",
         organizador: "Camila Torres",
-        fotos: 5
+        fotos: 5,
+        img : "fotos/Yoga.jpg"
+
       },
       {
         inicio: "2025-04-10 15:00",
         termino: "2025-04-10 17:00",
         comuna: "La Florida",
         sector: "Plaza Violeta Parra",
-        tema: "Cine Infantil al Aire Libre",
+        tema: "Cine al Aire Libre",
         organizador: "Rodrigo Díaz",
-        fotos: 4
+        fotos: 4,
+        img : "fotos/CineAireLibre.jpg"
       },
       {
         inicio: "2025-04-15 11:00",
@@ -58,7 +63,8 @@
         sector: "Parque Gabriela",
         tema: "Feria de Emprendedores",
         organizador: "Javiera León",
-        fotos: 4
+        fotos: 4,
+        img : "fotos/FeriaEmprendimiento.jpg"
       }
     ];
 
@@ -75,9 +81,33 @@
       <p><strong>Tema:</strong> ${act.tema}</p>
       <p><strong>Organizador:</strong> ${act.organizador}</p>
       <p><strong>Total de Fotos:</strong> ${act.fotos}</p>
+      <img id = imagen src="${act.img}" alt="FotoActividad" width="320" height="240" style="cursor: pointer;" onclick="Ampliar(this)">
     `;
+    // parecido a document.addEventListener("DOMContentLoaded", () => --- usado en javacript.js
+    window.onload = () => {
+  const FotoId = document.getElementById("imagen");
+  const cerrarID = document.getElementById("cerrar");
+
+  window.Ampliar = function(imagen = FotoId, boton = cerrarID) {
+    imagen.width = 800;
+    imagen.height = 600;
+    cerrarID.style.display = "block";
+  }
+
+  window.Cerrar = function(imagen = FotoId, boton = cerrarID) {
+    imagen.width = 320;
+    imagen.height = 240;
+    cerrarID.style.display = "none";
+  }
+}
+
   </script>
 
+<div style="display: flex; justify-content: center;">
+  <button  id="cerrar"type="button" style="padding: 10px; display:none" onclick="Cerrar()">Cerrar</button>
+</div>
+  <br>
+  <br>
 <a href="ListadoDeActividades.html">Volver al Listado de Actividades</a><br>
 <a href="index.html">Volver a la Portada</a>
 
