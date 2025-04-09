@@ -388,23 +388,41 @@ function validaOtroContacto(errorGeneral) {
 
 
 function verificaFecha() {
-  const inicio = document.getElementById("DiaHoraInicio").value;
-  const termino = document.getElementById("DiaHoraTermino").value;
+  const inicioInput = document.getElementById("DiaHoraInicio");
+  const terminoInput = document.getElementById("DiaHoraTermino");
   const errorSpan = document.getElementById("errorFecha");
+
+  const inicio = inicioInput.value;
+  const termino = terminoInput.value;
 
   if (!inicio) {
     errorSpan.textContent = "Debe ingresar una fecha de inicio.";
     return false;
   }
 
-  if (termino && inicio >= termino) {
+  const fechaInicio = new Date(inicio);
+
+  if (termino && new Date(termino) <= fechaInicio) {
     errorSpan.textContent = "La fecha de término debe ser posterior a la de inicio.";
     return false;
+  }
+
+  if (!termino) {
+    fechaInicio.setHours(fechaInicio.getHours() + 3);
+    const yyyy = fechaInicio.getFullYear();
+    const mm = String(fechaInicio.getMonth() + 1).padStart(2, '0');
+    const dd = String(fechaInicio.getDate()).padStart(2, '0');
+    const hh = String(fechaInicio.getHours()).padStart(2, '0');
+    const min = String(fechaInicio.getMinutes()).padStart(2, '0');
+
+    terminoInput.value = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
   }
 
   errorSpan.textContent = "";
   return true;
 }
+
+
 
 
 function validaFotos(errorGeneral) {
