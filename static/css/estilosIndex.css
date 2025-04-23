@@ -1,0 +1,55 @@
+#pagina{
+    background-color: rgb(220, 238, 213);
+}
+.table{
+    border: 1px solid black;
+    width: 80%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 30px;
+}
+
+.table td, .table th {
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 200px;
+    
+}
+.table tr {
+    height: 200px; 
+}
+
+.foto{
+    display: block;
+    margin: 0 auto;
+    width: 200px;
+}
+#tittle{
+    text-align: center;
+    font-size: 120px;
+}
+
+.MenuNavegacion{
+    font-size: 30px;
+}
+.centrado {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .centrado label,
+  .centrado select,
+  .centrado p {
+    display: block;
+    margin: 10px auto;
+  }
+  
+  .centrado select {
+    width: 250px;
+    padding: 5px;
+  }
+
+#titulo{
+    font-size: 50px;
+}

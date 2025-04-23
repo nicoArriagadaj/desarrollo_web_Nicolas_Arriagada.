@@ -1,0 +1,21 @@
+.table {
+    border-collapse: collapse; 
+    width: 100%;
+    font-size: 20px;
+    margin: 0 auto;
+}
+
+.table th,.table td {
+    border: 1px solid #938876; 
+    padding: 10px;
+    text-align: left;
+}
+
+
+body{
+    background-color: blanchedalmond;
+}
+
+.clickable-row td{
+    cursor: pointer;
+}

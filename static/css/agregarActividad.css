@@ -1,0 +1,109 @@
+body {
+    background-color: #e4f1dc;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  form {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px 40px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+ 
+  #titulo {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 30px;
+  }
+  
+ 
+  .fila-horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+    gap: 10px;
+  }
+  
+  .fila-horizontal label {
+    width: 200px;
+    text-align: right;
+    font-weight: bold;
+  }
+  
+  .fila-horizontal input,
+  .fila-horizontal select,
+  .fila-horizontal textarea {
+    flex: 1;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+  }
+  
+  
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 20px auto;
+    display: block;
+    background-color: #5d9c59;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    
+  }
+  
+  button:hover {
+    background-color: #4b844a;
+  }
+  #errorEmail {
+    color: red;
+    margin-left: 10px;
+  }
+  .foto-extra {
+    margin-left: 210px;
+  }
+  
+  input[type="datetime-local"] {
+    min-width: 250px;
+  }
+
+
+#input-otro-contacto {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+#otroInput{
+  padding: 3%;
+  width: 800px;
+}
+
+#zona-fotos {
+  display: flex;
+  flex-direction: column; 
+  gap: 10px; 
+  flex: 1;
+}
+
+.foto-input {
+  width: 100%;
+}
+
+
+.error-span {
+  color: red;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+
+
