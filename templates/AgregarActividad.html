@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <form action="/agregar_actividad" method="post" id="form" class="formulario">
+  <form action="/agregar_actividad" method="post" id="form" class="formulario" enctype="multipart/form-data">
     <h1 id="titulo">¿Dónde?</h1>
 
     <div class="fila-horizontal">
@@ -46,19 +46,19 @@
 
     <div class="fila-horizontal">
       <label for="sector">Sector (opcional)</label>
-      <input type="text" id="sector" maxlength="100" size="50" >
+      <input type="text" name = "sector" id="sector" maxlength="100" size="50" >
     </div>
 
     <h2 style="text-align: center;">¿Quién lo organiza?</h2>
 
     <div class="fila-horizontal">
       <label for="name">Nombre</label>
-      <input type="text" id="name" maxlength="200" required >
+      <input type="text" name = "name" id="name" maxlength="200" required >
     </div>
 
     <div class="fila-horizontal">
       <label for="email">Email</label>
-      <input type="email" id="email" maxlength="100" required > 
+      <input name = "email" type="email" id="email" maxlength="100" required > 
       <button type="button" id="validarCorreo">Validar</button>
       <span id="errorEmail" class="error-span"></span>
 
@@ -73,7 +73,7 @@
 
     <div class="fila-horizontal">
       <label for="contactar" >Contactar por</label>
-      <select id="contactar" onchange="otroContacto()">
+      <select name = "contactar" id="contactar" onchange="otroContacto()">
         <option value="" disabled selected>Seleccione una opción</option>
         <option value="whatsapp">WhatsApp</option>
         <option value="telegram">Telegram</option>

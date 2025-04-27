@@ -453,6 +453,7 @@ function validaFotos(errorGeneral) {
 
 
 function enviarFormulario() {
+  const formulario = document.getElementById("form"); // variable para manejar el formulario
   document.getElementById("form").style.display = "none";
   document.getElementById("confirmacion").style.display = "none";
 
@@ -460,7 +461,8 @@ function enviarFormulario() {
   mensajeFinal.style.textAlign = "center";
   mensajeFinal.innerHTML = `<h2>Hemos recibido su información, muchas gracias y suerte en su actividad.</h2>`;
   document.body.appendChild(mensajeFinal);
-}
+  formulario.submit(); // aqui cambiamos el "desea enviar......" a submit 
+} 
 
 
 // para cuando el usuario quiera cambiar datos en formulario, pero no ha presionado si quiere enviar la info o no, aplica css #form(id) atributo
