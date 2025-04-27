@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ListadoDeActividades</title>
-    <link rel="stylesheet" href="ListadoDeActividades.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ListadoDeActividades.css') }}">
 </head>
 <body>
     <p style="font-size: 30px;">Si haces clic sobre cualquiera, te lleva a otro HTML con la ficha ordenada, y luego se puede volver.</p>
@@ -71,7 +71,7 @@
             row.addEventListener("click", () => {
                 const id = row.getAttribute("data-id");
                 // con ?, estamos pasando datos a otra pagina 
-                window.location.href = `infoOrdenada.html?id=${id}`;
+                window.location.href = `/info?id=${id}`;
             });
         });
     </script>

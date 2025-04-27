@@ -1,31 +1,32 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Graficos</title>
-    </head>
-    <body>
-        <h1 style="text-align: center; font-size: 70px;">Analisis Estadistico</h1>
-        <h1 style="text-align: center;">Gráfico de barra</h1>
-        <div style="display: flex; justify-content: center; align-items: center;"> 
-        <img src="/fotos/GraficoBarras.png" alt="GraficoBarras">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráficos</title>
+</head>
+<body>
+    <h1 style="text-align: center; font-size: 70px;">Análisis Estadístico</h1>
+
+    <h1 style="text-align: center;">Gráfico de barra</h1>
+    <div style="display: flex; justify-content: center; align-items: center;"> 
+        <img src="{{ url_for('static', filename='fotos/GraficoBarras.png') }}" alt="Gráfico de Barras">
     </div>
 
-        <h1 style="text-align: center;">Grafico de torta</h1>
-        <div style="display: flex; justify-content: center; align-items: center;">
-        <img src="/fotos/GraficoTorta.png" alt="GraficoTorta"></div>
-        
-        <h1 style="text-align: center;" >Gráfico de líneas</h1>
-        <div style="display: flex; justify-content: center; align-items: center;">
-        <img src="fotos/GraficoLinea.png" alt="GraficoLinea"></div>
-    
-        <div style="display: flex; justify-content: center; align-items: center;"> 
-            <button type="button" onclick="location.href='index.html'" style="padding:50px;
-            background-color: rgb(133, 242, 204);">Volver a la portada</button>
-        </div>
-        
+    <h1 style="text-align: center;">Gráfico de torta</h1>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <img src="{{ url_for('static', filename='fotos/GraficoTorta.png') }}" alt="Gráfico de Torta">
+    </div>
 
-            
-    </body>
-    </html>
+    <h1 style="text-align: center;">Gráfico de líneas</h1>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <img src="{{ url_for('static', filename='fotos/GraficoLinea.png') }}" alt="Gráfico de Líneas">
+    </div>
+
+    <div style="display: flex; justify-content: center; align-items: center;"> 
+        <button type="button" onclick="location.href='/'" style="padding:50px; background-color: rgb(133, 242, 204);">
+            Volver a la portada
+        </button>
+    </div>
+</body>
+</html>

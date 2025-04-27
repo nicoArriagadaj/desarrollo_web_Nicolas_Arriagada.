@@ -15,58 +15,57 @@
   <script>
     // arreglo con actividades
     const actividades = [
-      {
-        inicio: "2025-03-28 12:00",
-        termino: "2025-03-28 14:00",
-        comuna: "Conchalí",
-        sector: "Plaza Bicentenario",
-        tema: "Taller de Basketball",
-        organizador: "Juan Pablo",
-        fotos: 2 ,
-        img : "fotos/basket.jpg"
-      },
-      {
-        inicio: "2025-04-01 10:00",
-        termino: "2025-04-01 12:00",
-        comuna: "Recoleta",
-        sector: "Plaza Santa Mónica",
-        tema: "Ejercicio al aire libre",
-        organizador: "María Paz",
-        fotos: 3,
-        img : "fotos/ejercicioAireLibre.jpg"
-      },
-      {
-        inicio: "2025-04-05 09:30",
-        termino: "2025-04-05 11:00",
-        comuna: "Ñuñoa",
-        sector: "Parque Ramón Cruz",
-        tema: "Clase de Yoga",
-        organizador: "Camila Torres",
-        fotos: 5,
-        img : "fotos/Yoga.jpg"
-
-      },
-      {
-        inicio: "2025-04-10 15:00",
-        termino: "2025-04-10 17:00",
-        comuna: "La Florida",
-        sector: "Plaza Violeta Parra",
-        tema: "Cine al Aire Libre",
-        organizador: "Rodrigo Díaz",
-        fotos: 4,
-        img : "fotos/CineAireLibre.jpg"
-      },
-      {
-        inicio: "2025-04-15 11:00",
-        termino: "2025-04-15 13:00",
-        comuna: "Puente Alto",
-        sector: "Parque Gabriela",
-        tema: "Feria de Emprendedores",
-        organizador: "Javiera León",
-        fotos: 4,
-        img : "fotos/FeriaEmprendimiento.jpg"
-      }
-    ];
+  {
+    inicio: "2025-03-28 12:00",
+    termino: "2025-03-28 14:00",
+    comuna: "Conchalí",
+    sector: "Plaza Bicentenario",
+    tema: "Taller de Basketball",
+    organizador: "Juan Pablo",
+    fotos: 2,
+    img: "basket.jpg"
+  },
+  {
+    inicio: "2025-04-01 10:00",
+    termino: "2025-04-01 12:00",
+    comuna: "Recoleta",
+    sector: "Plaza Santa Mónica",
+    tema: "Ejercicio al aire libre",
+    organizador: "María Paz",
+    fotos: 3,
+    img: "ejercicioAireLibre.jpg"
+  },
+  {
+    inicio: "2025-04-05 09:30",
+    termino: "2025-04-05 11:00",
+    comuna: "Ñuñoa",
+    sector: "Parque Ramón Cruz",
+    tema: "Clase de Yoga",
+    organizador: "Camila Torres",
+    fotos: 5,
+    img: "Yoga.jpg"
+  },
+  {
+    inicio: "2025-04-10 15:00",
+    termino: "2025-04-10 17:00",
+    comuna: "La Florida",
+    sector: "Plaza Violeta Parra",
+    tema: "Cine al Aire Libre",
+    organizador: "Rodrigo Díaz",
+    fotos: 4,
+    img: "CineAireLibre.jpg"
+  },
+  {
+    inicio: "2025-04-15 11:00",
+    termino: "2025-04-15 13:00",
+    comuna: "Puente Alto",
+    sector: "Parque Gabriela",
+    tema: "Feria de Emprendedores",
+    organizador: "Javiera León",
+    fotos: 4,
+    img: "FeriaEmprendimiento.jpg"
+  }
+];
 
     // obtenemos los id=1 o 2 y lo pasamos a entero
     const id = parseInt(new URLSearchParams(window.location.search).get("id"));
@@ -74,15 +73,15 @@
     const act = actividades[id - 1];
 
     document.getElementById("contenidoActividad").innerHTML = `
-      <p><strong>Inicio:</strong> ${act.inicio}</p>
-      <p><strong>Término:</strong> ${act.termino}</p>
-      <p><strong>Comuna:</strong> ${act.comuna}</p>
-      <p><strong>Sector:</strong> ${act.sector}</p>
-      <p><strong>Tema:</strong> ${act.tema}</p>
-      <p><strong>Organizador:</strong> ${act.organizador}</p>
-      <p><strong>Total de Fotos:</strong> ${act.fotos}</p>
-      <img id = imagen src="${act.img}" alt="FotoActividad" width="320" height="240" style="cursor: pointer;" onclick="Ampliar(this)">
-    `;
+  <p><strong>Inicio:</strong> ${act.inicio}</p>
+  <p><strong>Término:</strong> ${act.termino}</p>
+  <p><strong>Comuna:</strong> ${act.comuna}</p>
+  <p><strong>Sector:</strong> ${act.sector}</p>
+  <p><strong>Tema:</strong> ${act.tema}</p>
+  <p><strong>Organizador:</strong> ${act.organizador}</p>
+  <p><strong>Total de Fotos:</strong> ${act.fotos}</p>
+  <img id="imagen" src="/static/fotos/${act.img}" alt="FotoActividad" width="320" height="240" style="cursor: pointer;" onclick="Ampliar(this)">
+`;
     // parecido a document.addEventListener("DOMContentLoaded", () => --- usado en javacript.js
     window.onload = () => {
   const FotoId = document.getElementById("imagen");
@@ -108,8 +107,8 @@
 </div>
   <br>
   <br>
-<a href="ListadoDeActividades.html">Volver al Listado de Actividades</a><br>
-<a href="index.html">Volver a la Portada</a>
+<a href="/ListadoDeActividades">Volver al Listado de Actividades</a><br>
+<a href="/">Volver a la Portada</a>
 
 </body>
 </html>

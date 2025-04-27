@@ -1,83 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarea1</title>
-    <link rel="stylesheet" href="estilosIndex.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilosIndex.css') }}">
 </head>
 <body id="pagina">
     <h1 id="tittle"> BIENVENIDOS</h1>
 
-
     <nav class="MenuNavegacion">
         <ul>
-            <li> <a href="AgregarActividad.html"> Agregar actividad</a> </li>
-            <li> <a href="ListadoDeActividades.html"> Listado de actividades</a> </li>
-            <li> <a href="Estadisticas.html"> Estadisticas</a></li>
+            <li><a href="/AgregarActividad">Agregar actividad</a></li>
+            <li><a href="/ListadoDeActividades">Listado de actividades</a></li>
+            <li><a href="/Estadisticas">Estadísticas</a></li>
         </ul>
-
     </nav>
 
-
-    <table class="table" >
+    <table class="table">
         <tr> 
-            <th> Inicio </th>
-            <th> Termino </th>
-            <th> Comuna </th>
-            <th> Sector </th>
-            <th> Tema </th>
-            <th> Foto </th>
+            <th>Inicio</th>
+            <th>Término</th>
+            <th>Comuna</th>
+            <th>Sector</th>
+            <th>Tema</th>
+            <th>Foto</th>
         </tr>
 
         <tr>
-            <td> 2025-03-28 12:00</td>
-            <td> 2025-03-28 14:00</td>
-            <td> Santiago</td>
-            <td> Beauchef 850, terraza</td>
-            <td> Taller de cocina</td>
-            <td  style="width: 250px; height: 200px;"> <img src="fotos/FotoCocina.jpg" alt="FotoCocina" class="foto"></td>
+            <td>2025-03-28 12:00</td>
+            <td>2025-03-28 14:00</td>
+            <td>Santiago</td>
+            <td>Beauchef 850, terraza</td>
+            <td>Taller de cocina</td>
+            <td style="width: 250px; height: 200px;">
+                <img src="{{ url_for('static', filename='fotos/FotoCocina.jpg') }}" alt="FotoCocina" class="foto">
+            </td>
         </tr>
         <tr>
-            <td> 2025-03-29 19:00</td>
-            <td> 2025-03-29 20:00</td>
-            <td> Ñuñoa</td>
-            <td> Plaza</td>
-            <td> Taller de arte</td>
-            <td> <img src="fotos/arte.png" alt="foto de arte" class="foto"></td>
+            <td>2025-03-29 19:00</td>
+            <td>2025-03-29 20:00</td>
+            <td>Ñuñoa</td>
+            <td>Plaza</td>
+            <td>Taller de arte</td>
+            <td>
+                <img src="{{ url_for('static', filename='fotos/arte.png') }}" alt="foto de arte" class="foto">
+            </td>
         </tr>
         <tr>
-            <td> 2022-03-30 18:00</td>
-            <td> 2022-03-30 20:00</td>
-            <td> Santiago</td>
-            <td> Plaza de Armas </td>
-            <td> Taller de tejer</td>
-            <td> <img src="fotos/tejer.png" alt="foto de tejer" class="foto"></td>
+            <td>2022-03-30 18:00</td>
+            <td>2022-03-30 20:00</td>
+            <td>Santiago</td>
+            <td>Plaza de Armas</td>
+            <td>Taller de tejer</td>
+            <td>
+                <img src="{{ url_for('static', filename='fotos/tejer.png') }}" alt="foto de tejer" class="foto">
+            </td>
         </tr>
         <tr>
-            <td> 2025-03-27 8:00</td>
-            <td> 25-03-27 12:00</td>
-            <td> Santiago</td>
-            <td> Plaza de Armas </td>
-            <td> Hacking Etico</td>
-            <td> <img src="fotos/hacking.jpg" alt="foto de hackeo" class="foto"> </td>
+            <td>2025-03-27 8:00</td>
+            <td>2025-03-27 12:00</td>
+            <td>Santiago</td>
+            <td>Plaza de Armas</td>
+            <td>Hacking Ético</td>
+            <td>
+                <img src="{{ url_for('static', filename='fotos/hacking.jpg') }}" alt="foto de hackeo" class="foto">
+            </td>
         </tr>
         <tr>
-            <td> 2025-03-19</td>
-            <td> 2025-03-19</td>
-            <td> Santiago</td>
-            <td> Plaza de Armas </td>
-            <td> Taller de halterofilia</td>
-            <td> <img src="fotos/halterofilia.jpg" alt="foto de levantamiento de pesa" class="foto"></td>
+            <td>2025-03-19</td>
+            <td>2025-03-19</td>
+            <td>Santiago</td>
+            <td>Plaza de Armas</td>
+            <td>Taller de halterofilia</td>
+            <td>
+                <img src="{{ url_for('static', filename='fotos/halterofilia.jpg') }}" alt="foto de levantamiento de pesa" class="foto">
+            </td>
         </tr>
-
     </table>
 
-    <script src="Javascript.js"></script>
-
-   
-
-
-    
+    <script src="{{ url_for('static', filename='js/Javascript.js') }}"></script>
 </body>
 </html>
