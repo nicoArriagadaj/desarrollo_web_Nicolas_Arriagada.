@@ -151,21 +151,30 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+// cuando alguien selecciona contacto, esto lo valida. (estructura check vista en clases)
+function revisaCheck(element) {
+  const checkboxes = document.querySelectorAll('#redes-contacto input[type="checkbox"]');
+  const seleccionadas = Array.from(checkboxes).filter(c => c.checked);
 
-function otroContacto() {
-  const seleccion = document.getElementById("contactar").value;
-  const contenedor = document.getElementById("input-otro-contacto");
+  if (seleccionadas.length > 5) {
+    element.checked = false;
+    alert("Solo puedes seleccionar hasta 5 redes de contacto.");
+    return;
+  }
 
-  contenedor.innerHTML = "";
-  if (seleccion === "otra") {
-    const input = document.createElement("input");
-    input.id="otroInput"
-    input.type = "text";
+  const input = document.getElementById(element.name);
+  if (!input) return;
+
+  if (element.checked) {
+    input.style.display = "block";
+    input.required = true;
     input.minLength = 4;
     input.maxLength = 50;
-    input.placeholder = "Ingrese ID o URL";
-    input.name = "otraRed";
-    contenedor.appendChild(input);
+    input.placeholder = "ID o URL de contacto";
+  } else {
+    input.style.display = "none";
+    input.required = false;
+    input.value = "";
   }
 }
 
@@ -213,7 +222,7 @@ function MensajeRecibido() {
     return;
   }
 
-  if (!validaOtroContacto(errorGeneral)) return;
+  if (!validaContactos(errorGeneral)) return;
   
   // valida que el otro tenga minimo 3 y maximo 15 caracteres
   if (seleccionTema === "otro") {
@@ -366,23 +375,40 @@ function NumeroValido() {
   return true;
 }
 
-// cuando alguien selecciona otro contacto, esto lo valida.
-function validaOtroContacto(errorGeneral) {
-  const seleccion = document.getElementById("contactar").value;
+// cuando alguien selecciona contacto, esto lo valida. (estructura check vista en clases)
+function validaContactos(errorGeneral) {
+  const checkboxes = document.querySelectorAll('#redes-contacto input[type="checkbox"]');
+  const contactoError = document.getElementById("contactoError");
+  const seleccionadas = Array.from(checkboxes).filter(c => c.checked);
 
-  if (seleccion === "otra") {
-    const input = document.getElementById("otroInput");
-    const valor = input ? input.value.trim() : "";
+  contactoError.textContent = "";
+  errorGeneral.textContent = "";
 
+  if (seleccionadas.length > 5) {
+    contactoError.textContent = "Solo puedes seleccionar hasta 5 redes de contacto.";
+    return false;
+  }
+
+  let errores = [];
+
+  for (const checkbox of seleccionadas) {
+    const inputRelacionado = document.getElementById(checkbox.name);
+    if (!inputRelacionado) continue;
+
+    const valor = inputRelacionado.value.trim();
     if (valor.length < 4 || valor.length > 50) {
-      errorGeneral.textContent = "Debe ingresar un ID o URL válido (entre 4 y 50 caracteres).";
-      return false;
+      errores.push(checkbox.name); 
     }
+  }
+
+  if (errores.length > 0) {
+    const textoCampos = errores.map(c => `"${c}"`).join(", ");
+    contactoError.textContent = `Los campos de contacto para ${textoCampos} deben tener entre 4 y 50 caracteres.`;
+    return false;
   }
 
   return true;
 }
-
 
 
 

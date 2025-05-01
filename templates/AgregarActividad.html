@@ -13,6 +13,11 @@
 <body>
   <form action="/agregar_actividad" method="post" id="form" class="formulario" enctype="multipart/form-data">
     <h1 id="titulo">¿Dónde?</h1>
+    {% if error %}
+      {% for msg  in error %}
+      <span class="error-span">{{ msg  }}</span>
+      {% endfor %}
+    {% endif %}
 
     <div class="fila-horizontal">
       <label for="regiones">Seleccione la región</label>
@@ -62,6 +67,9 @@
       <button type="button" id="validarCorreo">Validar</button>
       <span id="errorEmail" class="error-span"></span>
 
+
+      
+
     </div>
 
     <div class="fila-horizontal">
@@ -71,21 +79,28 @@
       
     </div>
 
-    <div class="fila-horizontal">
-      <label for="contactar" >Contactar por</label>
-      <select name = "contactar" id="contactar" onchange="otroContacto()">
-        <option value="" disabled selected>Seleccione una opción</option>
-        <option value="whatsapp">WhatsApp</option>
-        <option value="telegram">Telegram</option>
-        <option value="instagram">Instagram</option>
-        <option value="tiktok">Tiktok</option>
-        <option value="X">X</option>
-        <option value="otra">Otra</option>
-      </select>
-    </div>
+    <p>Contactar por (máximo 5 selecciones y de 4 a 50 caracteres por bloque seleccionado)</p>
+    <div id="redes-contacto">
+      <input type="checkbox" name="whatsapp" onclick="revisaCheck(this)"> whatsapp<br>
+      <input id="whatsapp" name="id_whatsapp" type="text" style="display:none"><br>
     
-    <div id="input-otro-contacto"></div>
-    <span></span>
+      <input type="checkbox" name="instagram" onclick="revisaCheck(this)"> instagram<br>
+      <input id="instagram" name="id_instagram" type="text" style="display:none"><br>
+    
+      <input type="checkbox" name="telegram" onclick="revisaCheck(this)"> telegram<br>
+      <input id="telegram" name="id_telegram" type="text" style="display:none"><br>
+    
+      <input type="checkbox" name="X" onclick="revisaCheck(this)"> X<br>
+      <input id="X" name="id_X" type="text" style="display:none"><br>
+    
+      <input type="checkbox" name="tiktok" onclick="revisaCheck(this)"> tiktok<br>
+      <input id="tiktok" name="id_tiktok" type="text" style="display:none"><br>
+    
+      <input type="checkbox" name="otra" onclick="revisaCheck(this)"> otra<br>
+      <input id="otra" name="id_otra" type="text" style="display:none"><br>
+
+      <span id="contactoError" class="error-span"></span>
+    </div>
 
     <h2>¿Cuándo y de qué trata?</h2>
 

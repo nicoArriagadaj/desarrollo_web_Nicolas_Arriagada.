@@ -19,4 +19,5 @@ link Css
 - [ListadoDeActividades](static/css/ListadoDeActividades.css)
 - [estilosIndex](static/css/estilosIndex.css)
 
-
+link database
+- [ValidadoresPython](database/db.py) (en la valicacion de descripcion aunque sea opcional, pero puse un limite de 800 caracteres, para que no sobrecargue el servidor, al igual que en otras variables opcionales, puse limitaciones de caracteres por la misma razón)
