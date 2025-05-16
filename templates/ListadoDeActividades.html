@@ -8,72 +8,49 @@
 </head>
 <body>
     <p style="font-size: 30px;">Si haces clic sobre cualquiera, te lleva a otro HTML con la ficha ordenada, y luego se puede volver.</p>
-
+    
     <table class="table">
-        <tr> 
+        <tr>
             <th>Inicio</th>
             <th>Término</th>
             <th>Comuna</th>
             <th>Sector</th>
-            <th>Tema</th>
             <th>Nombre Organizador</th>
             <th>Total Fotos</th>
         </tr>
-        <tr class="clickable-row" data-id="1">
-            <td>2025-03-28 12:00</td>
-            <td>2025-03-28 14:00</td>
-            <td>Conchalí</td>
-            <td>Plaza Bicentenario</td>
-            <td>Taller de Basketball</td>
-            <td>Juan Pablo</td>
-            <td>2</td>
+        {% for a in actividades %}
+        <tr class="clickable-row" data-id="{{ a.id }}">
+        <td>{{ a['fecha_inicio'] }}</td>
+        <td>{{ a['fecha_termino'] }}</td>
+        <td>{{ a['comuna'] }}</td>
+        <td>{{ a['sector'] or '---' }}</td>
+        <td>{{ a['nombre'] }}</td>
+        <td>{{ a['total_fotos'] }}</td>
         </tr>
-        <tr class="clickable-row" data-id="2">
-            <td>2025-04-01 10:00</td>
-            <td>2025-04-01 12:00</td>
-            <td>Recoleta</td>
-            <td>Plaza Santa Mónica</td>
-            <td>Ejercicio al aire libre</td>
-            <td>María Paz</td>
-            <td>3</td>
-        </tr>
-        <tr class="clickable-row" data-id="3">
-            <td>2025-04-05 09:30</td>
-            <td>2025-04-05 11:00</td>
-            <td>Ñuñoa</td>
-            <td>Parque Ramón Cruz</td>
-            <td>Clase de Yoga</td>
-            <td>Camila Torres</td>
-            <td>5</td>
-        </tr>
-        <tr class="clickable-row" data-id="4">
-            <td>2025-04-10 15:00</td>
-            <td>2025-04-10 17:00</td>
-            <td>La Florida</td>
-            <td>Plaza Violeta Parra</td>
-            <td>Cine al Aire Libre</td>
-            <td>Rodrigo Díaz</td>
-            <td>4</td>
-        </tr>
-        <tr class="clickable-row" data-id="5">
-            <td>2025-04-15 11:00</td>
-            <td>2025-04-15 13:00</td>
-            <td>Puente Alto</td>
-            <td>Parque Gabriela</td>
-            <td>Feria de Emprendedores</td>
-            <td>Javiera León</td>
-            <td>4</td>
-        </tr>
+        {% endfor %}
     </table>
+
+    <div class="paginacion">
+        {% if pagina_actual > 1 %}
+            <a href="{{ url_for('listado', page=pagina_actual - 1) }}">&laquo; Anterior</a>
+        {% endif %}
+
+        <span>Página {{ pagina_actual }} de {{ total_paginas }}</span>
+
+        {% if pagina_actual < total_paginas %}
+            <a href="{{ url_for('listado', page=pagina_actual + 1) }}">Siguiente &raquo;</a>
+        {% endif %}
+    </div>
 
     <script>
         document.querySelectorAll(".clickable-row").forEach(row => {
             row.addEventListener("click", () => {
                 const id = row.getAttribute("data-id");
-                // con ?, estamos pasando datos a otra pagina 
                 window.location.href = `/info?id=${id}`;
             });
         });
     </script>
+
+    <button type="button" onclick="location.href='/'">Volver a la portada</button>
 </body>
 </html>

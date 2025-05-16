@@ -4,111 +4,61 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Información de la Actividad</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/ListadoDeActividades.css') }}">
 </head>
 <body>
 
   <h1>Ficha de Actividad</h1>
 
-  <div id="contenidoActividad"></div>
+  <div id="contenidoActividad">
+    <p><strong>Inicio:</strong> {{ actividad.fecha_inicio }}</p>
+    <p><strong>Término:</strong> {{ actividad.fecha_termino or '---' }}</p>
+    <p><strong>Comuna:</strong> {{ actividad.comuna }}</p>
+    <p><strong>Sector:</strong> {{ actividad.sector or '---' }}</p>
+    <p><strong>Tema(s):</strong></p>
+    <ul>
+      {% for tema in actividad.temas %}
+        <li>{{ tema.tema }}{% if tema.tema == 'otro' %} - {{ tema.glosa_otro }}{% endif %}</li>
+      {% endfor %}
+    </ul>
+    <p><strong>Organizador:</strong> {{ actividad.nombre }}</p>
+    <p><strong>Email:</strong> {{ actividad.email }}</p>
+    <p><strong>Celular:</strong> {{ actividad.celular }}</p>
+    <p><strong>Total de Fotos:</strong> {{ actividad.total_fotos }}</p>
 
-  <hr>
+    {% for foto in actividad.fotos %}
+      <img class="actividad-foto"
+           src="{{ foto }}"
+           alt="FotoActividad"
+           width="320" height="240"
+           style="cursor: pointer; margin: 5px;">
+    {% endfor %}
+  </div>
+
+  <div style="display: flex; justify-content: center;">
+    <button id="cerrar" type="button" style="padding: 10px; display:none" onclick="Cerrar()">Cerrar</button>
+  </div>
+
+  <br><br>
+  <a href="/listado_de_actividades">Volver al Listado de Actividades</a><br>
+  <a href="/">Volver a la Portada</a>
+
   <script>
-    // arreglo con actividades
-    const actividades = [
-  {
-    inicio: "2025-03-28 12:00",
-    termino: "2025-03-28 14:00",
-    comuna: "Conchalí",
-    sector: "Plaza Bicentenario",
-    tema: "Taller de Basketball",
-    organizador: "Juan Pablo",
-    fotos: 2,
-    img: "basket.jpg"
-  },
-  {
-    inicio: "2025-04-01 10:00",
-    termino: "2025-04-01 12:00",
-    comuna: "Recoleta",
-    sector: "Plaza Santa Mónica",
-    tema: "Ejercicio al aire libre",
-    organizador: "María Paz",
-    fotos: 3,
-    img: "ejercicioAireLibre.jpg"
-  },
-  {
-    inicio: "2025-04-05 09:30",
-    termino: "2025-04-05 11:00",
-    comuna: "Ñuñoa",
-    sector: "Parque Ramón Cruz",
-    tema: "Clase de Yoga",
-    organizador: "Camila Torres",
-    fotos: 5,
-    img: "Yoga.jpg"
-  },
-  {
-    inicio: "2025-04-10 15:00",
-    termino: "2025-04-10 17:00",
-    comuna: "La Florida",
-    sector: "Plaza Violeta Parra",
-    tema: "Cine al Aire Libre",
-    organizador: "Rodrigo Díaz",
-    fotos: 4,
-    img: "CineAireLibre.jpg"
-  },
-  {
-    inicio: "2025-04-15 11:00",
-    termino: "2025-04-15 13:00",
-    comuna: "Puente Alto",
-    sector: "Parque Gabriela",
-    tema: "Feria de Emprendedores",
-    organizador: "Javiera León",
-    fotos: 4,
-    img: "FeriaEmprendimiento.jpg"
-  }
-];
-
-    // obtenemos los id=1 o 2 y lo pasamos a entero
-    const id = parseInt(new URLSearchParams(window.location.search).get("id"));
-    // actividades, arreglo parte de 0 al 4 (son 5)
-    const act = actividades[id - 1];
-
-    document.getElementById("contenidoActividad").innerHTML = `
-  <p><strong>Inicio:</strong> ${act.inicio}</p>
-  <p><strong>Término:</strong> ${act.termino}</p>
-  <p><strong>Comuna:</strong> ${act.comuna}</p>
-  <p><strong>Sector:</strong> ${act.sector}</p>
-  <p><strong>Tema:</strong> ${act.tema}</p>
-  <p><strong>Organizador:</strong> ${act.organizador}</p>
-  <p><strong>Total de Fotos:</strong> ${act.fotos}</p>
-  <img id="imagen" src="/static/fotos/${act.img}" alt="FotoActividad" width="320" height="240" style="cursor: pointer;" onclick="Ampliar(this)">
-`;
-    // parecido a document.addEventListener("DOMContentLoaded", () => --- usado en javacript.js
+    // Zoom funcionalidad
     window.onload = () => {
-  const FotoId = document.getElementById("imagen");
-  const cerrarID = document.getElementById("cerrar");
-
-  window.Ampliar = function(imagen = FotoId, boton = cerrarID) {
-    imagen.width = 800;
-    imagen.height = 600;
-    cerrarID.style.display = "block";
-  }
-
-  window.Cerrar = function(imagen = FotoId, boton = cerrarID) {
-    imagen.width = 320;
-    imagen.height = 240;
-    cerrarID.style.display = "none";
-  }
-}
-
+      document.querySelectorAll('.actividad-foto').forEach(imagen => {
+        imagen.addEventListener('click', () => {
+          if (imagen.width === 320) {
+            imagen.width = 800;
+            imagen.height = 600;
+          } else {
+            imagen.width = 320;
+            imagen.height = 240;
+          }
+        });
+      });
+    };
   </script>
-
-<div style="display: flex; justify-content: center;">
-  <button  id="cerrar" type="button" style="padding: 10px; display:none" onclick="Cerrar()">Cerrar</button>
-</div>
-  <br>
-  <br>
-<a href="/listado_de_actividades">Volver al Listado de Actividades</a><br>
-<a href="/">Volver a la Portada</a>
 
 </body>
 </html>

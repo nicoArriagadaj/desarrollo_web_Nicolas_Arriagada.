@@ -7,12 +7,23 @@ import os
 
 app = Flask(__name__)
 
+UPLOAD_PATH = os.path.join(os.path.dirname(__file__), 'static', 'uploads')
+os.makedirs(UPLOAD_PATH, exist_ok=True) 
+app.config['UPLOAD_FOLDER'] = UPLOAD_PATH
+
 # del aux  
 app.secret_key = "s3cr3t_k3y"
-UPLOAD_FOLDER = 'static/fotos'
+
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    mensaje = session.pop('mensaje_exito', None)# el que se recibe con session['mensaje_exito']
+    actividades = dataBase.obtener_actividades_con_foto(limit=5) # Obtener las primeras 5 actividades para mostrar en el índice
+    return render_template('index.html', mensaje=mensaje, actividades=actividades)
+
+
+
+
 
 @app.route('/agregar_actividad')
 def agregar():
@@ -24,133 +35,114 @@ def estadisticas():
 
 @app.route('/info')
 def info():
-    return render_template('infoOrdenada.html')
+    actividad_id = request.args.get('id', type=int)
+    if not actividad_id:
+        return "ID de actividad no proporcionado", 400
+
+    actividad = dataBase.obtener_detalle_actividad(actividad_id)
+    if not actividad:
+        return "Actividad no encontrada", 404
+
+    return render_template('infoOrdenada.html', actividad=actividad)
 
 @app.route('/listado_de_actividades')
 def listado():
-    return render_template('ListadoDeActividades.html')
+    page = int(request.args.get('page', 1))  # Página actual, por defecto 1
+    actividades_por_pagina = 5
+    offset = (page - 1) * actividades_por_pagina
+
+    actividades, total = dataBase.obtener_actividades_paginadas(offset, actividades_por_pagina)
+
+    total_paginas = (total + actividades_por_pagina - 1) // actividades_por_pagina  # Redondeo hacia arriba
+
+    return render_template(
+        'ListadoDeActividades.html',
+        actividades=actividades,
+        pagina_actual=page,
+        total_paginas=total_paginas
+    )
 
 
 @app.route('/agregar_actividad', methods=['POST'])
 def agregar_actividad():
-    # procesar datos del formulario
-    email = request.form['email']
-    region = request.form['regiones']
-    comuna = request.form['comunas']
-    sector = request.form['sector']
-    name = request.form['name']
-    number = request.form['number']
-    # como en contactar hay multiples opciones, debo cambiarlo 
-    contactar = request.form['contactar']
-    DiaHoraInicio = request.form['DiaHoraInicio']
-    DiaHoraTermino = request.form.get['DiaHoraTermino',None] # get para que no falle si no se ingresa
-    description = request.form['descripción']
-    tema = request.form['tema']
-    fotos = request.files.getlist('Foto') 
+    try:
+        print("Contenido del formulario recibido:", request.form)
+        email = request.form.get('email', '')
+        region = request.form.get('regiones', '')
+        comuna = request.form.get('comunas', '')
+        sector = request.form.get('sector', '')
+        name = request.form.get('name', '')
+        number = request.form.get('number', '')
+        DiaHoraInicio = request.form.get('DiaHoraInicio', '')
+        DiaHoraTermino = request.form.get('DiaHoraTermino', '')
+        description = request.form.get('descripción', '')
+        fotos = request.files.getlist('Foto')
+        errors = []
+        if not dataBase.validate_email(email):
+            errors.append('Email inválido')
+        if not dataBase.validate_name(name):
+            errors.append('Nombre inválido')
+        if not dataBase.validate_number(number):
+            errors.append('Número inválido')
+        if not dataBase.validate_dates(DiaHoraInicio, DiaHoraTermino):
+            errors.append('Fechas inválidas')
+        if not dataBase.validate_foto(fotos):
+            errors.append('Fotos inválidas')
+        if not dataBase.validate_sector(sector):
+            errors.append('Sector inválido')
+        if not dataBase.validate_descripcion(description):
+            errors.append('Descripción inválida')
+        if not dataBase.validaTema(request.form):
+           errors.append("Debe seleccionar al menos un tema válido.")
+       
+        # Validar comuna numérica antes de cualquier otra validación que la use
+        if not comuna.isdigit():
+           errors.append("Debe seleccionar una comuna válida.")
+        else:
+           if not dataBase.validate_region_comuna(comuna, region):
+              errors.append('Región o comuna inválida')
+        if not dataBase.validate_contactar(request.form):
+            errors.append("Los datos de contacto no son válidos.")
 
-    errors = []
-    # aqui debo validar datos (me faltan algunos validadores)
-    # Validaciones (usar funciones ya hechas)
-    if not dataBase.validate_email(email):
-        errors.append('Email inválido')
-    if not dataBase.validate_name(name):
-        errors.append('Nombre inválido')
-    if not dataBase.validate_number(number):
-        errors.append('Número inválido')
-    if not dataBase.validate_dates(dia_hora_inicio, dia_hora_termino):
-        errors.append('Fechas inválidas')
-    if not dataBase.validate_foto(fotos):
-        errors.append('Fotos inválidas')
-    if not dataBase.validate_sector(sector):
-        errors.append('Sector inválido')
-    if not dataBase.validate_descripcion(description):
-        errors.append('Descripción inválida')
-    if not dataBase.validate_region_comuna(comuna, region):
-        errors.append('Región o comuna inválida')
-        # en temas, debo ver cuales se agregan
-    if not dataBase.validate_tema(temas[0], otro_tema):
-        errors.append('Tema inválido')
-    # esta parte debo arreglarla, pues mi AgregarActividad.html en contactar tiene un select unico, no multiple.
-    """ 
-    for contacto in medios_contacto:
-        if not dataBase.validate_contactar(contacto_otro if contacto == "otra" else contacto):
-            errors.append('Contacto inválido') """
-
-    if errors:
-            # usamos render_template si hacemos get, y redirect cuando es post
+        if errors:
             return render_template('AgregarActividad.html', errors=errors)
 
-    # Conversión fechas a datetime
-    fmt = "%Y-%m-%dT%H:%M"
-    dia_hora_inicio = datetime.strptime(dia_hora_inicio, fmt)
-    dia_hora_termino = datetime.strptime(dia_hora_termino, fmt) if dia_hora_termino else None
+        fmt = "%Y-%m-%dT%H:%M"
+        dia_hora_inicio = datetime.strptime(DiaHoraInicio, fmt)
+        dia_hora_termino = datetime.strptime(DiaHoraTermino, fmt) if DiaHoraTermino else None
 
-    # Guardar fotos
-    from werkzeug.utils import secure_filename # para seguridad
-    filenames = []
-    for foto in fotos:
-        filename = secure_filename(foto.filename)
-        ruta = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        foto.save(ruta)
-        filenames.append(filename)
+        from werkzeug.utils import secure_filename
+        filenames = []
+        for foto in fotos:
+            if foto.filename:
+                filename = secure_filename(foto.filename)
+                ruta = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                foto.save(ruta)
+                filenames.append(filename)
 
+        actividad_id = dataBase.create_actividad(
+            comuna_id=int(comuna),
+            sector=sector,
+            nombre=name,
+            email=email,
+            celular=number,
+            dia_hora_inicio=dia_hora_inicio,
+            dia_hora_termino=dia_hora_termino,
+            descripcion=description,
+        )
 
-        # Guardar actividad en base de datos
-    dataBase.create_actividad(
-        comuna_id=int(comuna),
-        sector=sector,
-        nombre=name,
-        email=email,
-        celular=number,
-        dia_hora_inicio=dia_hora_inicio,
-        dia_hora_termino=dia_hora_termino,
-        descripcion=description,
-    )
-    # REDIRECT PARA CUANDO SE HAGA EL POST =  redirigir
-    return redirect(url_for('index'))
-
+        dataBase.agregar_fotos_a_actividad(actividad_id, filenames)
+        dataBase.agregar_contactos_a_actividad(actividad_id, request.form)
+        dataBase.agregar_temas_a_actividad(actividad_id, request.form)
 
 
-    # validadores individuales
-    for err in (
-        dataBase.validate_email(email),
-        dataBase.validate_name(name),
-        dataBase.validate_sector(sector),
-        dataBase.validate_number(number),
-        dataBase.validate_contactar(contactar),
-        dataBase.validate_region_comuna(region, comuna),
-        dataBase.validate_descripcion(descripción),
-        ):
-        if err:
-            errors.append(err)
+        session['mensaje_exito'] = "Actividad agregada exitosamente"
+        return redirect(url_for('index'))
 
-    
-    tema = request.form.get("tema")
-    otro_tema = request.form.get("otroTema") # Nombre del Otro, que definimos en JS
-
-    if not dataBase.validate_tema(tema, otro_tema):
-      return render_template("AgregarActividad.html", error="Tema inválido")
-
-    from werkzeug.utils import secure_filename   # para seguridad 
-    for archivo in fotos:
-        archivo.save(f"uploads/{secure_filename(archivo.filename)}")  # guardar en uploads
-
-    # validadores de fechas
-    dt_ini, dt_fin, err = dataBase.validate_date(DiaHoraInicio, DiaHoraTermino)
-    if err:
-        errors.append(err)
-
-    if errors:
-      return render_template(("AgregarActividad.html"))
-
-
-
-
-    # Otros datos
-    db = SessionLocal()
-    return "Actividad agregada correctamente"  # o redirigir (aun tengo que ver esto)
-
+    except Exception as e:
+        return f"Ocurrió un error inesperado: {e}", 400
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+    

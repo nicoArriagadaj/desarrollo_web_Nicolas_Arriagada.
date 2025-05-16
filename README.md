@@ -1,7 +1,8 @@
 # Datos relevantes del proyecto
 ## Esta pagina web ha sido testeada en Microsoft Edge
-### Para la sección infoOrdenada, consideré adecuado utilizar solo una imagen, pues, aunque se podría colocar más como indica el número de fotos, considero que esto no le añade valor académico, ya que sería repetir la llamada al script varias veces con más imagenes de lo mismo, por ende, aunque digan 3 fotos coloqué solo 1, una que represente la actividad en general.
+### Para la sección bienvenidos, aunque hayan varias fotos, solamente habrá una, la primera que, ya que no hay muchos fines didácticos colocar muchas cuando con una basta
 #### cualquier duda contactar: Nicolás 
+
 <img src="static/fotos/gatomeme.jpg" alt="Gato Memero" width="300">
 
 links html:  
@@ -20,4 +21,14 @@ link Css
 - [estilosIndex](static/css/estilosIndex.css)
 
 link database
-- [ValidadoresPython](database/db.py) (en la valicacion de descripcion aunque sea opcional, pero puse un limite de 800 caracteres, para que no sobrecargue el servidor, al igual que en otras variables opcionales, puse limitaciones de caracteres por la misma razón)
+- [ValidadoresPython,conexión SQL y clases para conectar el sql](database/dataBase.py)
+ (en la valicacion de descripcion aunque sea opcional, pero puse un limite de 800 caracteres, para que no sobrecargue el servidor, al igual que en otras variables opcionales, puse limitaciones de caracteres por la misma razón)
+
+link de app
+- [Rutas flask](app.py)
+
+links sql
+-[Rutas SQL](dataBase/region-comuna.sql)
+-[Rutas SQL](dataBase/tarea2.sql)
+
+

@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 import re
 import app
 from datetime import datetime
+from datetime import timedelta
 
 
 
@@ -139,43 +140,51 @@ def validate_number(number):
 # de información de ID o URL
 # debe permitir mínimo 4
 # caracteres y máximo 50.
-def validate_contactar(contactar):
-     if not contactar:
-          return False
-     if contactar == "otra":
-          contactar = contactar.strip()
-          if len(contactar)<4 or len(contactar)>50:
-               return False
-          return True
-     return True
+def validate_contactar(formulario):
+    medios = ['whatsapp', 'instagram', 'telegram', 'X', 'tiktok', 'otra']
+    seleccionados = 0
+    for medio in medios:
+        # Si el checkbox fue marcado, estará presente
+        if medio in formulario:
+            campo_id = f"id_{medio}"
+            valor = formulario.get(campo_id, "").strip()
+
+            if not (4 <= len(valor) <= 50):
+                return False  #inválido
+            seleccionados += 1
+
+    # 0 a 5 selecciones válidas, true
+    return 0 <= seleccionados <= 5
      
 
-# obligatorio. Al menos 1
-# opción. Si selecciona otro, el
-# input debe permitir como
-# mínimo 3 caracteres y
-# máximo 15
-# otro_tema es como lo defini en el JS
-def validate_tema(tema, otro_tema=None):
-    if not tema:
-        return False
 
-    if tema == "Otro":
-        if not otro_tema:
-            return False
-        otro_tema = otro_tema.strip()
-        if len(otro_tema) < 3 or len(otro_tema) > 15:
-            return False
-    return True
+
             
 
 # obligatorios
-def validate_region_comuna(comuna,region):
-      if not comuna or not region:
-           return False
-      elif comuna not in region.comunas:
-           return False
-      return True
+# quitarle espacios y mayusculas
+def normalize(text):
+    return text.strip().lower()
+
+def validate_region_comuna(comuna_id, region_nombre):
+    session = SessionLocal()
+    try:
+        comuna_obj = session.query(Comuna).filter_by(id=int(comuna_id)).first()
+        if not comuna_obj:
+            print("No se encontró la comuna con id:", comuna_id)
+            return False
+
+        nombre_db = normalize(comuna_obj.region.nombre)
+        nombre_form = normalize(region_nombre)
+
+        print("REGIÓN en BD:", repr(nombre_db))
+        print("REGIÓN en formulario:", repr(nombre_form))
+
+        return nombre_db == nombre_form
+    finally:
+        session.close()
+
+
 # HoraInicio 
 # obligatorio. Debe cumplir con
 # el formato año-mes-dia
@@ -239,14 +248,43 @@ def validate_descripcion(descripcion):
           return False
      return True
 
+# obligatorio. Al menos 1
+# opción. Si selecciona otro, el
+# input debe permitir como
+# mínimo 3 caracteres y
+# máximo 15
+# input.name = 'otroTema'  JS
+def validaTema(formulario):
+    arreglo = [
+        'musica',
+        'deporte',
+        'ciencias',
+        'religion',
+        'politica',
+        'tecnologia',
+        'juegos',
+        'baile',
+        'comida',
+        'otro',
+    ]
+
+    if not any(tema in formulario for tema in arreglo):
+        return False
+
+    if 'otro' in formulario:
+        otro_tema = formulario.get('otroTema', '').strip() 
+        if len(otro_tema) < 3 or len(otro_tema) > 15:
+            return False
+
+    return True
 
 
+    
 
 
 
 # para crear una actividad
 def create_actividad(comuna_id, sector, nombre, email, celular, dia_hora_inicio, dia_hora_termino, descripcion):
-    # abre sesion con la base de datos
     session = SessionLocal()
     try:
         nueva_actividad = Actividad(
@@ -259,14 +297,171 @@ def create_actividad(comuna_id, sector, nombre, email, celular, dia_hora_inicio,
             dia_hora_termino=dia_hora_termino,
             descripcion=descripcion
         )
-        # add es para agregar a la base de datos
         session.add(nueva_actividad)
-        # commit es para guardar los cambios en la base de datos
-        # si no se hace commit, no se guardan los cambios
         session.commit()
+        return nueva_actividad.id  # retorna el id 
     except Exception as e:
-        # si hay un error, se hace rollback para deshacer los cambios
         session.rollback()
         raise e
+    finally:
+        session.close()
+
+# para agregar los temas a la actividad
+def agregar_fotos_a_actividad(actividad_id, lista_nombres_archivos):
+    session = SessionLocal()
+    try:
+        for nombre_archivo in lista_nombres_archivos:
+            nueva_foto = Foto(
+                ruta_archivo=f"static/fotos/{nombre_archivo}",
+                nombre_archivo=nombre_archivo,
+                actividad_id=actividad_id
+            )
+            session.add(nueva_foto)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
+
+    
+# agregar contactos a la actividad
+def agregar_contactos_a_actividad(actividad_id, formulario):
+    session = SessionLocal()
+    try:
+        medios = ['whatsapp', 'instagram', 'telegram', 'X', 'tiktok', 'otra']
+        for medio in medios:
+            identificador = formulario.get(f"id_{medio}", "").strip()
+            if identificador:
+                nuevo_contacto = ContactarPor(
+                    nombre=medio,
+                    identificador=identificador,
+                    actividad_id=actividad_id
+                )
+                session.add(nuevo_contacto)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
+
+def agregar_temas_a_actividad(actividad_id, formulario):
+    session = SessionLocal()
+    try:
+        temas_form = [
+            'musica', 'deporte', 'ciencias', 'religion', 'politica',
+            'tecnologia', 'juegos', 'baile', 'comida', 'otro'
+        ]
+        # pues hay tildes dentro de la base de datos de sql
+        mapeo_enum = {
+            'musica': 'música',
+            'deporte': 'deporte',
+            'ciencias': 'ciencias',
+            'religion': 'religión',
+            'politica': 'política',
+            'tecnologia': 'tecnología',
+            'juegos': 'juegos',
+            'baile': 'baile',
+            'comida': 'comida',
+            'otro': 'otro'
+        }
+
+        for tema in temas_form:
+            if tema in formulario:
+                tema_enum = mapeo_enum[tema]
+                glosa = formulario.get("otroTema", "").strip() if tema == 'otro' else None
+
+                nuevo_tema = ActividadTema(
+                    tema=tema_enum,
+                    glosa_otro=glosa if glosa else None,
+                    actividad_id=actividad_id
+                )
+                session.add(nuevo_tema)
+
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
+
+def obtener_actividades_paginadas(offset, limit):
+    session = SessionLocal()
+    try:
+        total = session.query(Actividad).count()
+        actividades = session.query(Actividad).offset(offset).limit(limit).all()
+
+        resultado = []
+        for a in actividades:
+            fecha_termino = (
+                (a.dia_hora_inicio + timedelta(hours=3)) if a.dia_hora_termino is None else a.dia_hora_termino
+            )
+            total_fotos = len(a.fotos)
+
+            resultado.append({
+                'id': a.id,
+                'nombre': a.nombre,
+                'email': a.email,
+                'celular': a.celular,
+                'comuna': a.comuna.nombre,
+                'region': a.comuna.region.nombre,
+                'sector': a.sector,
+                'fecha_inicio': a.dia_hora_inicio.strftime('%Y-%m-%d %H:%M'),
+                'fecha_termino': fecha_termino.strftime('%Y-%m-%d %H:%M') if fecha_termino else '---',
+                'total_fotos': total_fotos
+            })
+        return resultado, total
+    finally:
+        session.close()
+
+
+def obtener_detalle_actividad(actividad_id):
+    session = SessionLocal()
+    try:
+        a = session.query(Actividad).filter_by(id=actividad_id).first()
+        if not a:
+            return None
+
+        return {
+            'id': a.id,
+            'nombre': a.nombre,
+            'email': a.email,
+            'sector': a.sector,
+            'comuna': a.comuna.nombre,
+            'celular': a.celular,
+            'region': a.comuna.region.nombre,
+            'fecha_inicio': a.dia_hora_inicio,
+            'fecha_termino': a.dia_hora_termino,
+            'descripcion': a.descripcion,
+            'temas': [{'tema': t.tema, 'glosa_otro': t.glosa_otro} for t in a.temas],
+            'contactos': [{'medio': c.nombre, 'dato': c.identificador} for c in a.contactos],
+            'fotos': [f"/static/uploads/" + f.nombre_archivo for f in a.fotos],
+            'total_fotos': len(a.fotos)  
+        }
+    finally:
+        session.close()
+
+
+def obtener_actividades_con_foto(limit=5):
+    session = SessionLocal()
+    try:
+        actividades = session.query(Actividad).order_by(Actividad.dia_hora_inicio.desc()).limit(limit).all()
+        resultado = []
+        for a in actividades:
+            fecha_termino = (
+                (a.dia_hora_inicio + timedelta(hours=3)) if a.dia_hora_termino is None else a.dia_hora_termino
+            )
+            primera_foto = a.fotos[0].nombre_archivo if a.fotos else None
+            resultado.append({
+                'id': a.id,
+                'nombre': a.nombre,
+                'comuna': a.comuna.nombre,
+                'sector': a.sector,
+                'fecha_inicio': a.dia_hora_inicio.strftime('%Y-%m-%d %H:%M'),
+                'fecha_termino': fecha_termino.strftime('%Y-%m-%d %H:%M') if fecha_termino else '---',
+                'foto_url': f"/static/uploads/{primera_foto}" if primera_foto else None
+            })
+        return resultado
     finally:
         session.close()

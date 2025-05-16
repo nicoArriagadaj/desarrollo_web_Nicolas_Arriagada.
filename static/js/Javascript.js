@@ -95,11 +95,7 @@ function agregarFoto() {
 }
 // prog funcional, para obtener el nombre del json
 function obtenerComuna(nombreRegion) {
-  let retornaComunas = region_comuna.regiones
-    .find(region => region.nombre === nombreRegion)
-    .comunas
-    .map(comuna => comuna.nombre.trim());
-    return retornaComunas
+  return region_comuna.regiones.find(region => region.nombre === nombreRegion).comunas;
 }
 
 
@@ -131,22 +127,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectComuna = document.getElementById("comuna");
 
   selectRegion.addEventListener("change", () => {
-    const regionSeleccionada = selectRegion.value;
-    const comunas = comunasPorRegion[regionSeleccionada] || [];
+  const nombreRegion = selectRegion.value;  // <-- usar el value, no el text
+  const region = region_comuna.regiones.find(r => r.nombre.trim() === nombreRegion.trim());
+  const comunas = region ? region.comunas : [];
 
-    selectComuna.innerHTML = '<option value="selector" disabled selected>Seleccione una comuna</option>';
-    comunas.forEach(comuna => {
-      const option = document.createElement("option");
-      option.value = comuna.toLowerCase().replace(/\s+/g, "_");
-      option.textContent = comuna;
-      selectComuna.appendChild(option);
-    });
+  selectComuna.innerHTML = '<option value="" disabled selected>Seleccione una comuna</option>';
+  comunas.forEach(comuna => {
+    const option = document.createElement("option");
+    option.value = comuna.id;
+    option.textContent = comuna.nombre;
+    selectComuna.appendChild(option);
   });
+});
 
   // Enlazar funciones a eventos
   document.getElementById("agregarFoto").addEventListener("click", agregarFoto);
   document.getElementById("validarCorreo").addEventListener("click", correoValido);
-  document.getElementById("tema").addEventListener("change", otroTema);
   document.getElementById("AgregarActividad").addEventListener("click", MensajeRecibido);
 });
 
@@ -181,19 +177,23 @@ function revisaCheck(element) {
 
 
 function otroTema() {
-  const inputOtroTema = document.getElementById("input_otro_tema");
-  const seleccionTema = document.getElementById("tema").value;
+  const checkboxOtro = document.querySelector('#tema input[name="otro"]');
+  const input = document.getElementById("id_otro");
+  
 
-  inputOtroTema.innerHTML = "";
+  if (!input) return;
 
-  if (seleccionTema === "otro") {
-    const nuevo = document.createElement("input");
-    nuevo.type = "text";
-    nuevo.minLength = 3;
-    nuevo.maxLength = 15;
-    nuevo.placeholder = "Ingrese tema";
-    nuevo.id = "otroTemaInput"; 
-    inputOtroTema.appendChild(nuevo);
+  if (checkboxOtro.checked) {
+    input.style.display = "block";
+    input.required = true;
+    input.placeholder = "Ingrese tema 3 a 15 caracteres";
+    input.minLength = 3;
+    input.maxLength = 15;
+    input.name = 'otroTema'
+  } else {
+    input.style.display = "none";
+    input.required = false;
+    input.value = "";
   }
 }
 
@@ -216,23 +216,9 @@ function MensajeRecibido() {
 
   const correoOk = correoValido();
   if (!correoOk) return;
-  const seleccionTema = document.getElementById("tema").value;
-  if (!seleccionTema) {
-    errorGeneral.textContent = "Debe seleccionar un tema.";
-    return;
-  }
 
-  if (!validaContactos(errorGeneral)) return;
-  
-  // valida que el otro tenga minimo 3 y maximo 15 caracteres
-  if (seleccionTema === "otro") {
-    const inputTema = document.getElementById("otroTemaInput");
-    const valor = inputTema ? inputTema.value.trim() : "";
-    if (valor.length < 3 || valor.length > 15) {
-      errorGeneral.textContent = "El tema ingresado debe tener entre 3 y 15 caracteres.";
-      return;
-    }
-  }
+
+  if (!validaTemas(errorGeneral)) return;
   
 
   if (!formulario.checkValidity()) {
@@ -272,8 +258,30 @@ function MensajeRecibido() {
 
 
 
+function validaTemas(errorGeneral) {
+  const checkboxes = document.querySelectorAll('#tema input[type="checkbox"]');
+  const temaError = document.getElementById("temaError");
+  const seleccionadas = Array.from(checkboxes).filter(c => c.checked);
 
+  temaError.textContent = "";
+  errorGeneral.textContent = "";
 
+  if (seleccionadas.length < 1) {
+    temaError.textContent = "Debe seleccionar al menos un tema.";
+    return false;
+  }
+
+  const checkboxOtro = document.querySelector('#tema input[name="otro"]');
+  if (checkboxOtro && checkboxOtro.checked) {
+    const inputOtro = document.getElementById("id_otro");
+    if (!inputOtro || inputOtro.value.trim().length < 3 || inputOtro.value.trim().length > 15) {
+      temaError.textContent = "El campo 'Otro' debe tener entre 3 y 15 caracteres.";
+      return false;
+    }
+  }
+
+  return true;
+}
 
 
 
@@ -479,16 +487,22 @@ function validaFotos(errorGeneral) {
 
 
 function enviarFormulario() {
-  const formulario = document.getElementById("form"); // variable para manejar el formulario
-  document.getElementById("form").style.display = "none";
+  const formulario = document.getElementById("form");
   document.getElementById("confirmacion").style.display = "none";
+
+  // Reactivar campos antes de enviar
+  const elementos = document.querySelectorAll("#form input, #form select, #form textarea, #form button");
+  elementos.forEach(elemento => {
+    elemento.disabled = false;
+  });
 
   const mensajeFinal = document.createElement("div");
   mensajeFinal.style.textAlign = "center";
   mensajeFinal.innerHTML = `<h2>Hemos recibido su información, muchas gracias y suerte en su actividad.</h2>`;
   document.body.appendChild(mensajeFinal);
-  formulario.submit(); // aqui cambiamos el "desea enviar......" a submit 
-} 
+
+  formulario.submit();  // Ahora sí, campos activos, y se envían correctamente
+}
 
 
 // para cuando el usuario quiera cambiar datos en formulario, pero no ha presionado si quiere enviar la info o no, aplica css #form(id) atributo
@@ -496,6 +510,14 @@ function desactivarFormulario() {
   const elementos = document.querySelectorAll("#form input, #form select, #form textarea, #form button");
   elementos.forEach(elemento => {
     elemento.disabled = true;
+
+  });
+
+
+
+  const botonesConfirmacion = document.querySelectorAll("#confirmacion button");
+  botonesConfirmacion.forEach(boton => {
+    boton.disabled = false;
   });
 }
 function reactivarFormulario() {

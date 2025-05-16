@@ -12,33 +12,38 @@
 
 <body>
   <form action="/agregar_actividad" method="post" id="form" class="formulario" enctype="multipart/form-data">
+
+
     <h1 id="titulo">¿Dónde?</h1>
-    {% if error %}
-      {% for msg  in error %}
-      <span class="error-span">{{ msg  }}</span>
+
+    {% if errors %}
+      {% for msg in errors %}
+        <span class="error-span">{{ msg }}</span>
       {% endfor %}
     {% endif %}
+
+ 
 
     <div class="fila-horizontal">
       <label for="regiones">Seleccione la región</label>
       <select name="regiones" id="regiones" required>
-        <option value="" disabled selected >Seleccione una región</option>
-        <option value="arica">Arica y Parinacota</option>
-        <option value="tarapaca">Tarapacá</option>
-        <option value="antofagasta">Antofagasta</option>
-        <option value="atacama">Atacama</option>
-        <option value="coquimbo">Coquimbo</option>
-        <option value="valparaiso">Valparaíso</option>
-        <option value="metropolitana">Región Metropolitana</option>
-        <option value="ohiggins">Libertador General Bernardo O'Higgins</option>
-        <option value="maule">Maule</option>
-        <option value="nuble">Ñuble</option>
-        <option value="biobio">Biobío</option>
-        <option value="araucania">La Araucanía</option>
-        <option value="losrios">Los Ríos</option>
-        <option value="loslagos">Los Lagos</option>
-        <option value="aysen">Aysén del General Carlos Ibáñez del Campo</option>
-        <option value="magallanes">Magallanes y de la Antártica Chilena</option>
+        <option value="" disabled selected>Seleccione una región</option>
+        <option value="Región Arica y Parinacota">Arica y Parinacota</option>
+        <option value="Región de Tarapacá">Tarapacá</option>
+        <option value="Región de Antofagasta">Antofagasta</option>
+        <option value="Región de Atacama">Atacama</option>
+        <option value="Región de Coquimbo ">Coquimbo</option>
+        <option value="Región de Valparaíso">Valparaíso</option>
+        <option value="Región Metropolitana de Santiago ">Región Metropolitana</option>
+        <option value="Región del Libertador Bernardo Ohiggins">Libertador General Bernardo O'Higgins</option>
+        <option value="Región del Maule">Maule</option>
+        <option value="Región del Ñuble">Ñuble</option>
+        <option value="Región del Biobío">Biobío</option>
+        <option value="Región de La Araucanía">La Araucanía</option>
+        <option value="Región de Los Ríos">Los Ríos</option>
+        <option value="Región de Los Lagos">Los Lagos</option>
+        <option value="Región Aisén del General Carlos Ibáñez del Campo">Aysén del General Carlos Ibáñez del Campo</option>
+        <option value="Región de Magallanes y la Antártica Chilena">Magallanes y de la Antártica Chilena</option>
       </select>
     </div>
 
@@ -125,23 +130,35 @@
     
 
     <div class="fila-horizontal">
-      <label for="tema">Tema</label>
-      <select name="tema" id="tema" required>
-        <option value="" disabled selected>Seleccione una opcion</option>
-        <option value="musica">Música</option>
-        <option value="deporte">Deporte</option>
-        <option value="ciencias">Ciencias</option>
-        <option value="religion">Religión</option>
-        <option value="politica">Política</option>
-        <option value="tecnologia">Tecnología</option>
-        <option value="juegos">Juegos</option>
-        <option value="baile">Baile</option>
-        <option value="comida">Comida</option>
-        <option value="otro">Otro</option>
-      </select>
+<p>Tema. Al menos 1 opción</p>
+<div id="tema">
+  <input type="checkbox" name="musica"> Música<br>
 
-      <div id="input_otro_tema"></div>
-    </div>
+  <input type="checkbox" name="deporte"> Deporte<br>
+
+  <input type="checkbox" name="ciencias"> Ciencias<br>
+
+  <input type="checkbox" name="religion" > Religión<br>
+
+  <input type="checkbox" name="politica" > Política<br>
+
+  <input type="checkbox" name="tecnologia" > Tecnología<br>
+
+  <input type="checkbox" name="juegos"> Juegos<br>
+
+  <input type="checkbox" name="baile" > Baile<br>
+
+  <input type="checkbox" name="comida" onclick="revisaCheck(this)"> Comida<br>
+
+ <input type="checkbox" name="otro" onclick="otroTema()"> Otro<br>
+ 
+ <input id="id_otro" name="id_otro" type="text" style="display:none"><br>
+ <div id="input_otro_tema"></div>
+
+  <span id="temaError" class="error-span"></span>
+  
+</div>
+      </div>
     
 
     <div class="fila-horizontal" id="contenedor-fotos">
