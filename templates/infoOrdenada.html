@@ -7,58 +7,83 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ListadoDeActividades.css') }}">
 </head>
 <body>
-
   <h1>Ficha de Actividad</h1>
 
-  <div id="contenidoActividad">
-    <p><strong>Inicio:</strong> {{ actividad.fecha_inicio }}</p>
-    <p><strong>Término:</strong> {{ actividad.fecha_termino or '---' }}</p>
-    <p><strong>Comuna:</strong> {{ actividad.comuna }}</p>
-    <p><strong>Sector:</strong> {{ actividad.sector or '---' }}</p>
-    <p><strong>Tema(s):</strong></p>
-    <ul>
-      {% for tema in actividad.temas %}
-        <li>{{ tema.tema }}{% if tema.tema == 'otro' %} - {{ tema.glosa_otro }}{% endif %}</li>
+  <div style="display: flex; align-items: flex-start; gap: 40px;">
+    <div id="contenidoActividad" style="flex: 2;">
+      <p><strong>Inicio:</strong> {{ actividad.fecha_inicio }}</p>
+      <p><strong>Término:</strong> {{ actividad.fecha_termino or '---' }}</p>
+      <p><strong>Comuna:</strong> {{ actividad.comuna }}</p>
+      <p><strong>Sector:</strong> {{ actividad.sector or '---' }}</p>
+      <p><strong>Tema(s):</strong></p>
+      <ul>
+        {% for tema in actividad.temas %}
+          <li>{{ tema.tema }}{% if tema.tema == 'otro' %} - {{ tema.glosa_otro }}{% endif %}</li>
+        {% endfor %}
+      </ul>
+      <p><strong>Organizador:</strong> {{ actividad.nombre }}</p>
+      <p><strong>Email:</strong> {{ actividad.email }}</p>
+      <p><strong>Celular:</strong> {{ actividad.celular }}</p>
+      <p><strong>Total de Fotos:</strong> {{ actividad.total_fotos }}</p>
+      {% for foto in actividad.fotos %}
+        <img class="actividad-foto"
+             src="{{ foto }}"
+             alt="FotoActividad"
+             width="320" height="240"
+             style="cursor: pointer; margin: 5px;">
       {% endfor %}
-    </ul>
-    <p><strong>Organizador:</strong> {{ actividad.nombre }}</p>
-    <p><strong>Email:</strong> {{ actividad.email }}</p>
-    <p><strong>Celular:</strong> {{ actividad.celular }}</p>
-    <p><strong>Total de Fotos:</strong> {{ actividad.total_fotos }}</p>
+    </div>
 
-    {% for foto in actividad.fotos %}
-      <img class="actividad-foto"
-           src="{{ foto }}"
-           alt="FotoActividad"
-           width="320" height="240"
-           style="cursor: pointer; margin: 5px;">
-    {% endfor %}
-  </div>
+  
+<form id="formComentario" style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; padding: 24px; border: 2px solid rgb(227, 141, 11); border-radius: 8px; background-color: rgb(248, 151, 25);">
+  <h2 style="align-self: center; margin-top: 0; margin-bottom: 16px;">INGRESE SU COMENTARIO </h2>
+  <input type="hidden" name="actividad_id" value="{{ actividad.id }}">
+  <label for="nombre">Ingrese su Nombre</label>
+  <input type="text" name="nombre" id="nombre" required minlength="3" maxlength="80" placeholder="ingrese su nombre">
+  <label for="comentario">Comentario</label>
+  <textarea id="comentario" name="comentario" rows="4" cols="50" required minlength="5" placeholder="Escribe tu comentario aquí"></textarea>
+  <button type="submit">Enviar Comentario</button>
+</form>
+ </div>
 
-  <div style="display: flex; justify-content: center;">
-    <button id="cerrar" type="button" style="padding: 10px; display:none" onclick="Cerrar()">Cerrar</button>
-  </div>
+<div id="errores"></div>
+<h3>Comentarios</h3>
+<div id="comentarios"></div>
+
+
+
 
   <br><br>
   <a href="/listado_de_actividades">Volver al Listado de Actividades</a><br>
   <a href="/">Volver a la Portada</a>
 
   <script>
-    // Zoom funcionalidad
-    window.onload = () => {
-      document.querySelectorAll('.actividad-foto').forEach(imagen => {
-        imagen.addEventListener('click', () => {
-          if (imagen.width === 320) {
-            imagen.width = 800;
-            imagen.height = 600;
-          } else {
-            imagen.width = 320;
-            imagen.height = 240;
-          }
-        });
-      });
-    };
-  </script>
-
+    // Zoom 
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.actividad-foto').forEach(imagen => {
+    imagen.addEventListener('click', function() {
+      if (this.width === 320) {
+        this.width = 800;
+        this.height = 600;
+        if (!this.nextElementSibling || !this.nextElementSibling.classList.contains('btn-quitar-zoom')) {
+          const btn = document.createElement('button');
+          btn.textContent = 'Quitar zoom';
+          btn.className = 'btn-quitar-zoom';
+          btn.style.marginLeft = '10px';
+          btn.style.marginBottom = '20px';
+          btn.addEventListener('click', () => {
+            this.width = 320;
+            this.height = 240;
+            btn.remove(); 
+          });
+          this.parentNode.insertBefore(btn, this.nextSibling);
+        }
+      }
+    });
+  });
+  console.log('Script de zoom activado');
+});
+</script>
+  <script src="{{ url_for('static', filename='js/ajax_comentarios.js') }}"></script>
 </body>
 </html>

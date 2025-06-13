@@ -6,6 +6,8 @@ import re
 import app
 from datetime import datetime
 from datetime import timedelta
+from sqlalchemy import func
+from collections import Counter
 
 
 
@@ -69,6 +71,8 @@ class Actividad(Base):
     fotos = relationship("Foto", back_populates="actividad", cascade="all, delete-orphan")
     contactos = relationship("ContactarPor", back_populates="actividad", cascade="all, delete-orphan")
     temas = relationship("ActividadTema", back_populates="actividad", cascade="all, delete-orphan")
+    comentarios = relationship("Comentario", back_populates="actividad", cascade="all, delete-orphan")
+
 
 class Foto(Base):
     __tablename__ = "foto"
@@ -97,7 +101,20 @@ class ActividadTema(Base):
 
     actividad = relationship("Actividad", back_populates="temas")
 
- 
+# tabla-comentario.sql
+class Comentario(Base):
+    __tablename__  = "comentario"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(80), nullable=False)
+    texto = Column(String(300), nullable=False)
+    fecha = Column(DateTime, nullable=False)
+    actividad_id = Column(Integer, ForeignKey("actividad.id"), nullable=False)
+
+    actividad = relationship("Actividad", back_populates="comentarios")
+
+
+
+# crea todas las tablas que aun no existen en la db segun las clases que heredan de base (las que tienen Base)
 Base.metadata.create_all(engine)
 
 # obligatorio, debe cumplir con
@@ -463,5 +480,129 @@ def obtener_actividades_con_foto(limit=5):
                 'foto_url': f"/static/uploads/{primera_foto}" if primera_foto else None
             })
         return resultado
+    finally:
+        session.close()
+
+
+
+
+# El primero es un gráfico de líneas que informa la cantidad de 
+# actividades por día. En el eje X muestra los días y en el eje Y muestra la 
+# cantidad de actividades. 
+def EstadisticasGrafico1():
+    session = SessionLocal()
+    try:
+        actividades = session.query(Actividad.dia_hora_inicio).all()
+        dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'] 
+        #lunes=0, domingo=6
+        conteo = Counter([a[0].weekday() for a in actividades if a[0] is not None]) 
+        #Mapear índice numérico a nombre de día
+        resultado = {dias_semana[i]: conteo.get(i, 0) for i in range(7)}
+        return resultado
+    finally:
+        session.close()
+
+# El segundo gráfico es un gráfico de torta que muestra el total de 
+# actividades por tipo. 
+def EstadisticasGrafico2():
+    session = SessionLocal()
+    temas_form = ['música', 'deporte', 'ciencias', 'religión', 'política',
+                  'tecnología', 'juegos', 'baile', 'comida', 'otro']
+    
+    conteos = {}
+
+    try:
+        for tema in temas_form:
+            cantidad = session.query(func.count(ActividadTema.id)).filter_by(tema=tema).scalar()
+            conteos[tema] = cantidad
+        return conteos
+    finally:
+        session.close()
+
+from collections import defaultdict
+
+def EstadisticasGrafico3():
+    session = SessionLocal()
+    meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ]
+
+    # Diccionario con tramos
+    # esto lo hago, pues en vez de hacer un for para inicializar si la clave no existe, la creará y no fallará
+    # se puede hacer con for tmb
+    conteo = defaultdict(lambda: {'Mañana': 0, 'Mediodía': 0, 'Tarde': 0})
+    try:
+        actividades = session.query(Actividad.dia_hora_inicio).all()
+        for (fecha,) in actividades:
+            if fecha is None:
+                continue
+            mes = meses[fecha.month - 1]
+            hora = fecha.hour
+            if 6 <= hora < 12:
+                tramo = 'Mañana'
+            elif 12 <= hora < 18:
+                tramo = 'Mediodía'
+            else:
+                tramo = 'Tarde'
+
+            conteo[mes][tramo] += 1
+
+        return conteo
+
+    finally:
+        session.close()
+
+
+# validar nombre de comentario
+# (caja de texto, obligatorio con largo mínimo 3 y máximo 80)
+def validarComentarioNombre(nombre):
+    nombre = nombre.strip()
+    if len(nombre)<3 or len(nombre)>80:
+        return False
+    else:
+        return True
+# validar comentario de comentario
+#  dato obligatorio con al menos 5 caracteres
+# usamos 200 pues 4filas * 50columnas = 200 caracteres como max
+def validarComentario(comentario):
+    comentario = comentario.strip()
+    if len(comentario) < 5:
+        return False
+    if len(comentario) > 200:
+        return False
+    return True
+
+# agregar comentarios a la db
+def agregar_comentario(nombre, texto, actividad_id):
+    session = SessionLocal()
+    try:
+        nuevo_comentario = Comentario(
+            nombre=nombre.strip(),
+            texto=texto.strip(),
+            fecha=datetime.now(),
+            actividad_id=int(actividad_id)
+        )
+        session.add(nuevo_comentario)
+        session.commit()
+        return True
+    except Exception as e:
+        session.rollback()
+        print("Error al guardar el comentario:", e)
+        return False
+    finally:
+        session.close()
+
+        
+# obtener comentarios
+def obtener_comentarios_por_actividad(actividad_id):
+    session = SessionLocal()
+    try:
+        comentarios = session.query(Comentario).filter_by(actividad_id=actividad_id).order_by(Comentario.fecha.desc()).all()
+        return [{
+            "nombre": c.nombre,
+            "texto": c.texto,
+            "fecha": c.fecha.strftime("%Y-%m-%d %H:%M")
+        } for c in comentarios]
     finally:
         session.close()

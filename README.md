@@ -2,8 +2,12 @@
 ## Esta pagina web ha sido testeada en Microsoft Edge
 ### Para la sección bienvenidos, aunque hayan varias fotos, solamente habrá una, la primera que, ya que no hay muchos fines didácticos colocar muchas cuando con una basta
 #### cualquier duda contactar: Nicolás 
+<div style="display: flex; justify-content: center; gap: 16px;">
+  <img src="static/fotos/gatomeme.jpg" alt="Gato Memero" width="350">
+  <img src="static/fotos/totoro.jpg" alt="Totoro" width="350">
+  <img src="static/fotos/gato.jpg" alt="gato" width="350">
+</div>
 
-<img src="static/fotos/gatomeme.jpg" alt="Gato Memero" width="300">
 
 links html:  
 - [Ir a la portada](templates/index.html)  
@@ -30,5 +34,6 @@ link de app
 links sql
 -[Rutas SQL](dataBase/region-comuna.sql)
 -[Rutas SQL](dataBase/tarea2.sql)
+-[Rutas SQL](dataBase/tabla-comentario.sql)
 
 

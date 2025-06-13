@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from database import dataBase 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import filetype
+import filetype 
 import os
+
 
 app = Flask(__name__)
 
@@ -24,7 +25,7 @@ def index():
 
 
 
-
+# get
 @app.route('/agregar_actividad')
 def agregar():
     return render_template('AgregarActividad.html')
@@ -33,9 +34,58 @@ def agregar():
 def estadisticas():
     return render_template('Estadisticas.html')
 
+
+
+@app.route('/api/estadisticas/dias_semana')
+def datos_estadisticas_diasGrafico1():
+    datos = dataBase.EstadisticasGrafico1()
+    return jsonify(datos)
+
+
+@app.route('/api/estadisticas/temas')
+def datos_estadisticasGrafico2():
+    datos = dataBase.EstadisticasGrafico2()
+    return jsonify(datos)
+
+@app.route('/api/estadisticas/Meses')
+def datos_estadisticasGrafico3():
+    datos = dataBase.EstadisticasGrafico3()
+    return jsonify(datos)
+
+
+#agregarComentario a la db
+@app.route('/api/comentario', methods=['POST'])
+def api_agregar_comentario():
+    data = request.get_json()
+    nombre = data.get("nombre", "").strip()
+    comentario = data.get("comentario", "").strip()
+    actividad_id = data.get("actividad_id", "").strip()
+    errors = []
+    # Validaciones igual que antes
+    if not dataBase.validarComentarioNombre(nombre):
+        errors.append("Nombre inválido (3-80 caracteres).")
+    if not dataBase.validarComentario(comentario):
+        errors.append("Comentario inválido (mín. 5 y max. 200 caracteres).")
+    if not actividad_id.isdigit():
+        errors.append("ID de actividad inválido.")
+    if errors:
+        return jsonify(success=False, errors=errors)
+    try:
+        dataBase.agregar_comentario(nombre, comentario, actividad_id)
+        return jsonify(success=True)
+    except Exception as e:
+        return jsonify(success=False, errors=[str(e)]), 500
+
+@app.route('/api/comentarios/<int:actividad_id>', methods=['GET'])
+def api_listar_comentarios(actividad_id):
+    comentarios = dataBase.obtener_comentarios_por_actividad(actividad_id)
+    return jsonify(comentarios=comentarios)
+
 @app.route('/info')
 def info():
     actividad_id = request.args.get('id', type=int)
+    if not actividad_id:
+        actividad_id = request.args.get('actividad_id', type=int)
     if not actividad_id:
         return "ID de actividad no proporcionado", 400
 
@@ -45,15 +95,28 @@ def info():
 
     return render_template('infoOrdenada.html', actividad=actividad)
 
+# arreglar el problemad de que, dar una pagina invalida, redirecciona a 1, o a la ultima.
 @app.route('/listado_de_actividades')
 def listado():
-    page = int(request.args.get('page', 1))  # Página actual, por defecto 1
+    try:
+        page = int(request.args.get('page', 1))
+    except ValueError:
+        page = 1 
+
+    if page < 1:
+        page = 1
+
     actividades_por_pagina = 5
     offset = (page - 1) * actividades_por_pagina
 
     actividades, total = dataBase.obtener_actividades_paginadas(offset, actividades_por_pagina)
+    total_paginas = (total + actividades_por_pagina - 1) // actividades_por_pagina
 
-    total_paginas = (total + actividades_por_pagina - 1) // actividades_por_pagina  # Redondeo hacia arriba
+    # Si la página solicitada es mayor que el total de páginas, redirigir a la última
+    if total_paginas > 0 and page > total_paginas:
+        page = total_paginas
+        offset = (page - 1) * actividades_por_pagina
+        actividades, total = dataBase.obtener_actividades_paginadas(offset, actividades_por_pagina)
 
     return render_template(
         'ListadoDeActividades.html',
@@ -141,6 +204,10 @@ def agregar_actividad():
 
     except Exception as e:
         return f"Ocurrió un error inesperado: {e}", 400
+
+
+
+
 
 
 if __name__ == '__main__':
