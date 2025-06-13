@@ -3,9 +3,9 @@
 ### Para la sección bienvenidos, aunque hayan varias fotos, solamente habrá una, la primera que, ya que no hay muchos fines didácticos colocar muchas cuando con una basta
 #### cualquier duda contactar: Nicolás 
 <div style="display: flex; justify-content: center; gap: 16px;">
-  <img src="static/fotos/gatomeme.jpg" alt="Gato Memero" width="300">
-  <img src="static/fotos/totoro.jpg" alt="Totoro" width="300">
-  <img src="static/fotos/gato.jpg" alt="gato" width="300">
+  <img src="static/fotos/gatomeme.jpg" alt="Gato Memero" width="290">
+  <img src="static/fotos/totoro.jpg" alt="Totoro" width="290">
+  <img src="static/fotos/gato.jpg" alt="gato" width="290">
 </div>
 
 
