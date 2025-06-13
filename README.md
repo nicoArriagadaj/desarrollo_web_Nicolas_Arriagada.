@@ -36,4 +36,8 @@ links sql
 -[Rutas SQL](dataBase/tarea2.sql)
 -[Rutas SQL](dataBase/tabla-comentario.sql)
 
+ahora, como nueva funcionalidad, se utilzaron llamadas asincronas, para generar graficos y tener respuestas en vivo, sin la necesidad de  refrescar la pagina, con fetch utilizando javascript.
 
+para - [Estadísticas](templates/Estadisticas.html)  se utilizó ajax para los gráficos [ajaxGraficos](static/js/ajax.js)
+
+para - [Info Ordenada](templates/infoOrdenada.html) se utilizó ajax para los comentarios [ajaxComentarios](static/js/ajax_comentarios.js)
