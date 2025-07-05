@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Actividades finalizadas Evaluaciones</title>
+<style>
+  body{font-family:sans-serif;margin:1.5rem}
+  table{border-collapse:collapse;width:100%}
+  th,td{border:1px solid #ccc;padding:.4rem;text-align:left}
+  th{background:#f2f2f2}
+  tr:nth-child(even){background:#fafafa}
+  button{padding:.25rem .75rem;cursor:pointer}
+  .center{text-align:center}
+</style>
+</head>
+
+<body>
+
+<h1>Actividades finalizadas</h1>
+
+<table>
+ <thead>
+  <tr>
+    <th>ID</th><th>Inicio</th><th>Sector</th><th>Nombre</th>
+    <th>Tema</th>
+    <th class="center">Nota&nbsp;(1-7)</th>
+    <th class="center"># eval.</th>
+    <th class="center">Acción</th>
+  </tr>
+ </thead>
+
+ <tbody>
+  <tr th:each="a : ${actividades}" th:id="'fila-'+${a.id}">
+    <td th:text="${a.id}">1</td>
+
+    <td th:text="${a.diaHoraInicio != null ?
+                 #temporals.format(a.diaHoraInicio,'yyyy-MM-dd HH:mm') : ''}">
+    </td>
+
+    <td th:text="${a.sector}"></td>
+    <td th:text="${a.nombre}"></td>
+
+    <td th:text="${#lists.isEmpty(a.temas) ? '' :
+                 a.temas.iterator().next().tema}">
+    </td>
+
+    <td class="center nota"
+        th:text="${#lists.isEmpty(a.notas) ?
+                 '-' :
+                 #numbers.formatDecimal(#aggregates.avg(a.notas.![valor]),1,1)}">
+        -
+    </td>
+
+    <td class="center cuenta"
+        th:text="${#lists.size(a.notas)}">0</td>
+
+    <td class="center">
+      <button th:onclick="'evaluar('+${a.id}+');'">evaluar</button>
+    </td>
+  </tr>
+ </tbody>
+</table>
+
+<script>
+function evaluar(id){
+  const valorStr = prompt("Ingrese nota entera (1-7):");
+  if (valorStr === null) return;
+
+  const v = Number(valorStr);
+  if (!Number.isInteger(v) || v < 1 || v > 7){
+    alert("Nota inválida: solo enteros del 1 al 7");
+    return;
+  }
+
+  fetch("/api/notas",{
+      method:"POST",
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({actividadId:id, valor:v})
+  })
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(p => {
+      document.querySelector("#fila-"+id+" .nota").textContent   =
+            p.promedio.toFixed(1);
+      document.querySelector("#fila-"+id+" .cuenta").textContent =
+            p.total;
+  })
+  .catch(() => alert("Error al guardar"));
+}
+</script>
+
+</body>
+</html>
